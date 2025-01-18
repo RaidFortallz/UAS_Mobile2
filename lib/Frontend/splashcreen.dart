@@ -83,10 +83,11 @@ class _SplashcreenState extends State<Splashcreen>
                     child: const Text(
                       'J - W I R \n'
                       'C O F F E E',
+                      textAlign: TextAlign.center,
                       style: TextStyle(fontFamily: "poppinsregular" , fontSize: 50.0, color: warnaKopi),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -112,12 +113,12 @@ class _BottomPart extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
+          children: [ 
             const Text(
               'J-WIR COFFEE',
              style: TextStyle(
               fontFamily: "poppinsregular",
-              fontSize: 27.0,
+              fontSize: 22.0,
                fontWeight: FontWeight.w700,
                 color: Colors.white),
             ),
@@ -127,17 +128,17 @@ class _BottomPart extends StatelessWidget {
               'WIR: Warm, Inspiring, Relaxing (Menggambarkan suasana coffee shop yang nyaman dan menyenangkan).',
               style: TextStyle(
                 fontFamily: "poppinsregular",
-              fontSize: 14.5,
+              fontSize: 15.0,
                color: Colors.white.withOpacity(0.8),
                 height: 1.5
                 ),
             ),
-            const SizedBox(height: 50.0,),
+            const SizedBox(height: 40.0,),
             Align(
               alignment: Alignment.centerRight,
               child: Container(
-                  height: 85.0,
-                  width: 85.0,
+                  height: 65.0,
+                  width: 65.0,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white, width: 2.0),
