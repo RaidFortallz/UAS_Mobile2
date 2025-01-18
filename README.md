@@ -1,16 +1,9 @@
-# uas_mobile2
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+UAS Pemrograman Mobile II
+Tema Aplikasi: Coffee Shop
+Nama Aplikasi: J-WIR COFFEE
+Kelas: TIF RP 22 CNS
+Disusun oleh:
+- Ageng Eko Widitya (22552011082)
+-	Hikam Sirrul Arifin (22552011066)
+-	M Dimas Daniswara Putra (22552011263)
+-	Naufal Pratista Sugandhi (22552011077)
