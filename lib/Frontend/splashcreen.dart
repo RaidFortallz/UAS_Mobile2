@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:lottie/lottie.dart';
+import 'package:uas_mobile2/Frontend/login.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class Splashcreen extends StatefulWidget {
@@ -18,7 +20,9 @@ class _SplashcreenState extends State<Splashcreen>
   @override
   void initState() {
     super.initState();
+
     _coffeeControler = AnimationController(vsync: this);
+
     _coffeeControler.addListener(() {
       if (_coffeeControler.value > 0.7) {
         _coffeeControler.stop();
@@ -34,8 +38,8 @@ class _SplashcreenState extends State<Splashcreen>
 
   @override
   void dispose() {
-    super.dispose();
     _coffeeControler.dispose();
+    super.dispose();
   }
 
   @override
@@ -62,8 +66,10 @@ class _SplashcreenState extends State<Splashcreen>
                     'assets/image/splashscreen_kopi.json',
                     controller: _coffeeControler,
                     onLoaded: (composition) {
+                      // Memulai animasi dari awal
                       _coffeeControler
                         ..duration = composition.duration
+                        ..reset()
                         ..forward();
                     },
                   ),
@@ -84,7 +90,10 @@ class _SplashcreenState extends State<Splashcreen>
                       'J - W I R \n'
                       'C O F F E E',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontFamily: "poppinsregular" , fontSize: 50.0, color: warnaKopi),
+                      style: TextStyle(
+                          fontFamily: "poppinsregular",
+                          fontSize: 50.0,
+                          color: warnaKopi),
                     ),
                   ),
                 ),
@@ -92,10 +101,9 @@ class _SplashcreenState extends State<Splashcreen>
             ),
           ),
 
-          //Nampilin text di bawah setelah spashcreen
+          // Nampilin text di bawah setelah spashscreen
           Visibility(
-            visible: animatedCoffee,
-            child: const _BottomPart()),
+              visible: animatedCoffee, child: const _BottomPart()),
         ],
       ),
     );
@@ -113,30 +121,40 @@ class _BottomPart extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [ 
+          children: [
             const Text(
               'J-WIR COFFEE',
-             style: TextStyle(
-              fontFamily: "poppinsregular",
-              fontSize: 22.0,
-               fontWeight: FontWeight.w700,
-                color: Colors.white),
+              style: TextStyle(
+                  fontFamily: "poppinsregular",
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white),
             ),
-            const SizedBox(height: 30.0,),
+            const SizedBox(
+              height: 30.0,
+            ),
             Text(
               'J: Java (mengacu pada kopi, terutama kopi Jawa yang terkenal). \n'
-              'WIR: Warm, Inspiring, Relaxing (Menggambarkan suasana coffee shop yang nyaman dan menyenangkan).',
+              'WIR: Warm, Inspiring, Relaxing (Menggambarkan suasana aplikasi coffee shop yang nyaman dan menyenangkan).',
               style: TextStyle(
-                fontFamily: "poppinsregular",
-              fontSize: 15.0,
-               color: Colors.white.withOpacity(0.8),
-                height: 1.5
-                ),
+                  fontFamily: "poppinsregular",
+                  fontSize: 15.0,
+                  color: Colors.white.withOpacity(0.8),
+                  height: 1.5),
             ),
-            const SizedBox(height: 40.0,),
+            const SizedBox(
+              height: 40.0,
+            ),
             Align(
               alignment: Alignment.centerRight,
-              child: Container(
+              child: Bounceable(
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context, 
+                    MaterialPageRoute(builder: (context) => const Login()),
+                    );
+                },
+                child: Container(
                   height: 65.0,
                   width: 65.0,
                   decoration: BoxDecoration(
@@ -148,11 +166,15 @@ class _BottomPart extends StatelessWidget {
                     size: 50.0,
                     color: Colors.white,
                   ),
+                ),
               ),
             ),
-            const SizedBox(height: 50.0,),
+            const SizedBox(
+              height: 50.0,
+            ),
           ],
-        ),),
+        ),
+      ),
     );
   }
 }

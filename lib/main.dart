@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:uas_mobile2/Frontend/splashcreen.dart';
+import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: warnaKopi,
+      statusBarBrightness: Brightness.light
+    ));
   runApp(const MyApp());
   
 }
