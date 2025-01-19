@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:lottie/lottie.dart';
 import 'package:uas_mobile2/Frontend/login.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
@@ -16,6 +15,7 @@ class _SplashcreenState extends State<Splashcreen>
   late AnimationController _coffeeControler;
   bool animatedCoffee = false;
   bool animatedCoffeeText = false;
+  bool showLoginRegister = false;
 
   @override
   void initState() {
@@ -26,11 +26,18 @@ class _SplashcreenState extends State<Splashcreen>
     _coffeeControler.addListener(() {
       if (_coffeeControler.value > 0.7) {
         _coffeeControler.stop();
+        
         animatedCoffee = true;
         setState(() {});
+
         Future.delayed(const Duration(seconds: 1), () {
           animatedCoffeeText = true;
           setState(() {});
+          
+          Future.delayed(const Duration(seconds: 1), () {
+            showLoginRegister = true;
+            setState(() {});
+          });
         });
       }
     });
@@ -102,8 +109,7 @@ class _SplashcreenState extends State<Splashcreen>
           ),
 
           // Nampilin text di bawah setelah spashscreen
-          Visibility(
-              visible: animatedCoffee, child: const _BottomPart()),
+          Visibility(visible: animatedCoffee, child: _BottomPart(showLoginRegister: showLoginRegister,)),
         ],
       ),
     );
@@ -111,10 +117,13 @@ class _SplashcreenState extends State<Splashcreen>
 }
 
 class _BottomPart extends StatelessWidget {
-  const _BottomPart();
+  final bool showLoginRegister;
+  const _BottomPart({required this.showLoginRegister});
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
@@ -133,45 +142,109 @@ class _BottomPart extends StatelessWidget {
             const SizedBox(
               height: 30.0,
             ),
-            Text(
-              'J: Java (mengacu pada kopi, terutama kopi Jawa yang terkenal). \n'
-              'WIR: Warm, Inspiring, Relaxing (Menggambarkan suasana aplikasi coffee shop yang nyaman dan menyenangkan).',
-              style: TextStyle(
+            RichText(
+              text: TextSpan(
+                style: TextStyle(
                   fontFamily: "poppinsregular",
                   fontSize: 15.0,
                   color: Colors.white.withOpacity(0.8),
-                  height: 1.5),
+                  height: 1.5,
+                  ),
+                  children: const [
+                    TextSpan(
+                      text: 'J: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                      text: 'Java (mengacu pada kopi, terutama kopi Jawa yang terkenal). \n'
+                    ),
+                      TextSpan(
+                        text: 'WIR: ',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(
+                        text: 'Warm, Inspiring, Relaxing (Menggambarkan suasana aplikasi coffee shop yang nyaman dan menyenangkan).'
+                      )
+                  ]
+              ),
             ),
             const SizedBox(
               height: 40.0,
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Bounceable(
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context, 
-                    MaterialPageRoute(builder: (context) => const Login()),
-                    );
-                },
+            AnimatedOpacity(
+              opacity: showLoginRegister ? 1 : 0,
+              duration: const Duration(seconds: 1),
+              child: Flexible(
                 child: Container(
-                  height: 65.0,
-                  width: 65.0,
+                  height: 50,
+                  width: size.width,
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2.0),
-                  ),
-                  child: const Icon(
-                    Icons.chevron_right,
-                    size: 50.0,
-                    color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      color: bgwarna.withOpacity(0.9),
+                      border: Border.all(
+                        color: Colors.white,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12.withOpacity(
+                            0.05,
+                          ),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: const Offset(0, -1),
+                        )
+                      ]),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 5),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Login()));
+                          },
+                          child: Container(
+                            height: 50,
+                            width: size.width / 2.4,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: const Center(
+                                child: Text(
+                              "Login",
+                              style: TextStyle(
+                                  fontFamily: "poppinsregular",
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 17,
+                                  color: warnaKopi),
+                            )),
+                          ),
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: () {},
+                          child: const Text(
+                            "Register",
+                            style: TextStyle(
+                                fontFamily: "poppinsregular",
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600,
+                                color: warnaKopi),
+                          ),
+                        ),
+                        const Spacer(),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
             const SizedBox(
               height: 50.0,
-            ),
+            )
           ],
         ),
       ),

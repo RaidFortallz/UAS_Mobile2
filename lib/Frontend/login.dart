@@ -29,7 +29,7 @@ class _LoginState extends State<Login> {
               Container(
                 height: 400,
                 decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50.0), bottomRight: Radius.circular(50.0)),
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(70.0), bottomRight: Radius.circular(70.0)),
                   gradient: LinearGradient(
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
@@ -55,13 +55,13 @@ class _LoginState extends State<Login> {
                     ),
                     Positioned(
                       child: Container(
-                        margin: const EdgeInsets.only(top: 270),
+                        margin: const EdgeInsets.only(top: 280),
                         child: const Center(
                           child: Text(
-                            "Login",
+                            "SELAMAT DATANG",
                             style: TextStyle(
                               fontFamily: "poppinsregular",
-                              fontSize: 35,
+                              fontSize: 25,
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
                             ),
@@ -150,8 +150,7 @@ class _LoginState extends State<Login> {
                             gradient: const LinearGradient(colors: [
                                warnaKopi,
                                warnaKopi2,
-                            ]
-                            
+                            ],
                             ),
                           ),
                           child: const Center(
@@ -172,7 +171,7 @@ class _LoginState extends State<Login> {
                     Bounceable(
                       onTap: (){},
                         child: const Text(
-                          "Lupa Password?",
+                          "Belum Punya Akun? REGISTER",
                           style: TextStyle(
                             fontFamily: "poppinsregular",
                             color: warnaKopi,
