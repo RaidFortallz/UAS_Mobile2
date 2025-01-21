@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
+import 'package:uas_mobile2/Frontend/Hal_Login&Register/login.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class Register extends StatefulWidget {
@@ -25,7 +26,7 @@ class _RegisterState extends State<Register> {
           child: ListView(
             children: [
               Container(
-                height: 400,
+                height: 280,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(70.0),
@@ -43,20 +44,21 @@ class _RegisterState extends State<Register> {
                 child: Stack(
                   children: [
                     Positioned(
-                      width: 300,
-                      height: 300,
-                      left: 10,
+                      top: 20,
+                      width: 210,
+                      height: 210,
+                      left: 73,
                       child: Container(
                         decoration: const BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage('assets/image/bg_kopi.png'),
+                            image: AssetImage('assets/image/bg_kopi3.png'),
                           ),
                         ),
                       ),
                     ),
                     Positioned(
                       child: Container(
-                        margin: const EdgeInsets.only(top: 280),
+                        margin: const EdgeInsets.only(top: 200),
                         child: const Center(
                           child: Text(
                             "DAFTAR AKUN",
@@ -78,7 +80,7 @@ class _RegisterState extends State<Register> {
                 child: Column(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(5),
+                      padding: const EdgeInsets.only(top: 5, left: 5, right: 5),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
@@ -92,22 +94,22 @@ class _RegisterState extends State<Register> {
                       ),
                       child: Column(
                         children: [
-                          // Input Nama Lengkap
+                          // Input Username
                           buildTextField(
-                            hintText: "Nama Lengkap",
-                            icon: Icons.person,
+                            hintText: "Username",
+                            icon: Icons.person_3_outlined,
                             obscureText: false,
                           ),
                           // Input Email
                           buildTextField(
                             hintText: "Email",
-                            icon: Icons.email,
+                            icon: Icons.email_outlined,
                             obscureText: false,
                           ),
                           // Input Password
                           buildTextField(
                             hintText: "Password",
-                            icon: Icons.lock,
+                            icon: Icons.lock_outline,
                             obscureText: _isSecurePassword,
                             toggle: () => setState(() {
                               _isSecurePassword = !_isSecurePassword;
@@ -116,16 +118,17 @@ class _RegisterState extends State<Register> {
                           // Input Konfirmasi Password
                           buildTextField(
                             hintText: "Konfirmasi Password",
-                            icon: Icons.lock,
+                            icon: Icons.lock_outline,
                             obscureText: _isSecureConfirmPassword,
                             toggle: () => setState(() {
-                              _isSecureConfirmPassword = !_isSecureConfirmPassword;
+                              _isSecureConfirmPassword =
+                                  !_isSecureConfirmPassword;
                             }),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 25),
                     Bounceable(
                       onTap: () {
                         // Logika untuk tombol register
@@ -158,8 +161,11 @@ class _RegisterState extends State<Register> {
                     const SizedBox(height: 50),
                     Bounceable(
                       onTap: () {
-                        // Navigasi ke halaman Login
-                        Navigator.pop(context); // Kembali ke halaman Login
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const Login())); // Kembali ke halaman Login
                       },
                       child: const Text(
                         "Sudah Punya Akun? LOGIN",

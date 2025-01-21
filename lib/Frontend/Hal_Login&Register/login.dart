@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
+import 'package:uas_mobile2/Frontend/Hal_Login&Register/register.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
-
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -11,9 +11,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
   bool _isSecurePassword = true;
-
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +27,9 @@ class _LoginState extends State<Login> {
               Container(
                 height: 400,
                 decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(70.0), bottomRight: Radius.circular(70.0)),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(70.0),
+                      bottomRight: Radius.circular(70.0)),
                   gradient: LinearGradient(
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
@@ -37,7 +37,7 @@ class _LoginState extends State<Login> {
                       warnaKopi,
                       warnaKopi2,
                     ],
-                    ),
+                  ),
                 ),
                 child: Stack(
                   children: [
@@ -121,7 +121,8 @@ class _LoginState extends State<Login> {
                             padding: const EdgeInsets.all(8.0),
                             child: TextField(
                               obscureText: _isSecurePassword,
-                              style: const TextStyle(fontFamily: "poppinsregular"),
+                              style:
+                                  const TextStyle(fontFamily: "poppinsregular"),
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(
                                   Icons.lock_outline,
@@ -132,7 +133,7 @@ class _LoginState extends State<Login> {
                                 hintStyle: TextStyle(
                                     fontFamily: "poppinsregular",
                                     color: Colors.grey[400]),
-                                    suffixIcon: togglePassword(),
+                                suffixIcon: togglePassword(),
                               ),
                             ),
                           ),
@@ -140,44 +141,50 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     const SizedBox(height: 30),
-                   Bounceable(
-                        onTap: () {},
-                        child: Container(
-                          margin: const EdgeInsets.only(top: 20),
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: const LinearGradient(colors: [
-                               warnaKopi,
-                               warnaKopi2,
+                    Bounceable(
+                      onTap: () {
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 20),
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: const LinearGradient(
+                            colors: [
+                              warnaKopi,
+                              warnaKopi2,
                             ],
-                            ),
                           ),
-                          child: const Center(
-                            child: Text(
-                              "Login",
-                              style: TextStyle(
-                                fontFamily: "poppinsregular",
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            "Login",
+                            style: TextStyle(
+                              fontFamily: "poppinsregular",
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
                             ),
                           ),
                         ),
                       ),
-                    
+                    ),
                     const SizedBox(height: 50),
                     Bounceable(
-                      onTap: (){},
-                        child: const Text(
-                          "Belum Punya Akun? REGISTER",
-                          style: TextStyle(
-                            fontFamily: "poppinsregular",
-                            color: warnaKopi,
-                            fontSize: 14,
-                          ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Register()));
+                      },
+                      child: const Text(
+                        "Belum Punya Akun? REGISTER",
+                        style: TextStyle(
+                          fontFamily: "poppinsregular",
+                          color: warnaKopi,
+                          fontSize: 14,
                         ),
+                      ),
                     ),
                   ],
                 ),
@@ -189,14 +196,17 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget togglePassword(){
-    return IconButton(onPressed: (){
-      setState(() {
-        _isSecurePassword = !_isSecurePassword;
-      });
-    }, icon: _isSecurePassword ? const Icon(Icons.visibility_off) : const Icon(Icons.visibility),
-    color: warnaKopi,
+  Widget togglePassword() {
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          _isSecurePassword = !_isSecurePassword;
+        });
+      },
+      icon: _isSecurePassword
+          ? const Icon(Icons.visibility_off)
+          : const Icon(Icons.visibility),
+      color: warnaKopi,
     );
   }
-
 }
