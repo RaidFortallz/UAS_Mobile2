@@ -143,6 +143,7 @@ class _LoginState extends State<Login> {
                     const SizedBox(height: 30),
                     Bounceable(
                       onTap: () {
+                        Navigator.pushNamed(context, '/dashboard');
                       },
                       child: Container(
                         margin: const EdgeInsets.only(top: 20),
