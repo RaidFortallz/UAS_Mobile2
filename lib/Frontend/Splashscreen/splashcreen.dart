@@ -107,7 +107,7 @@ class _SplashcreenState extends State<Splashcreen>
             ),
           ),
 
-          // Menampilkan bagian bawah setelah splashscreen
+          // Menampilkan kelas bottom_part setelah splashscreen
           Visibility(
             visible: animatedCoffee,
             child: BottomPart(showLoginRegister: showLoginRegister),
