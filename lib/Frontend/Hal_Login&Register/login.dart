@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
-import 'package:uas_mobile2/Frontend/Hal_Login&Register/register.dart';
+import 'package:uas_mobile2/Backend/firebase_auth.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class Login extends StatefulWidget {
@@ -11,7 +11,37 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final FirebaseAuthService _authService = FirebaseAuthService();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool _isSecurePassword = true;
+
+  void _loginUser() async {
+    final username = _usernameController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (username.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Username dan password harus diisi!")),
+      );
+      return;
+    }
+
+    try {
+      await _authService.loginWithUsername(
+        username: username,
+        email: "$username@example.com",
+        password: password,
+      );
+
+      Navigator.pushReplacementNamed(
+          context, '/dashboard'); // Redirect ke dashboard
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +54,14 @@ class _LoginState extends State<Login> {
           },
           child: ListView(
             children: [
+              // Bagian Atas
               Container(
                 height: 400,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(70.0),
-                      bottomRight: Radius.circular(70.0)),
+                    bottomLeft: Radius.circular(70.0),
+                    bottomRight: Radius.circular(70.0),
+                  ),
                   gradient: LinearGradient(
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
@@ -72,6 +104,7 @@ class _LoginState extends State<Login> {
                   ],
                 ),
               ),
+              // Bagian Form Login
               Padding(
                 padding: const EdgeInsets.all(30.0),
                 child: Column(
@@ -91,6 +124,7 @@ class _LoginState extends State<Login> {
                       ),
                       child: Column(
                         children: [
+                          // Input Username
                           Container(
                             padding: const EdgeInsets.all(8.0),
                             decoration: BoxDecoration(
@@ -101,9 +135,10 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                             child: TextField(
+                              controller: _usernameController,
                               style:
                                   const TextStyle(fontFamily: "poppinsregular"),
-                              textCapitalization: TextCapitalization.words,
+                              textCapitalization: TextCapitalization.none,
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(
                                   Icons.person_3_outlined,
@@ -112,14 +147,17 @@ class _LoginState extends State<Login> {
                                 border: InputBorder.none,
                                 hintText: "Username",
                                 hintStyle: TextStyle(
-                                    fontFamily: "poppinsregular",
-                                    color: Colors.grey[400]),
+                                  fontFamily: "poppinsregular",
+                                  color: Colors.grey[400],
+                                ),
                               ),
                             ),
                           ),
+                          // Input Password
                           Container(
                             padding: const EdgeInsets.all(8.0),
                             child: TextField(
+                              controller: _passwordController,
                               obscureText: _isSecurePassword,
                               style:
                                   const TextStyle(fontFamily: "poppinsregular"),
@@ -131,9 +169,22 @@ class _LoginState extends State<Login> {
                                 border: InputBorder.none,
                                 hintText: "Password",
                                 hintStyle: TextStyle(
-                                    fontFamily: "poppinsregular",
-                                    color: Colors.grey[400]),
-                                suffixIcon: togglePassword(),
+                                  fontFamily: "poppinsregular",
+                                  color: Colors.grey[400],
+                                ),
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isSecurePassword = !_isSecurePassword;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    _isSecurePassword
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                    color: warnaKopi,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -141,10 +192,9 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     const SizedBox(height: 30),
+                    // Tombol Login
                     Bounceable(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/dashboard');
-                      },
+                      onTap: _loginUser,
                       child: Container(
                         margin: const EdgeInsets.only(top: 20),
                         height: 50,
@@ -171,12 +221,11 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     const SizedBox(height: 50),
+                    // Tombol Daftar
                     Bounceable(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Register()));
+                        Navigator.pushNamed(context,
+                            '/register'); // Arahkan ke halaman register
                       },
                       child: const Text(
                         "Belum Punya Akun? REGISTER",
@@ -194,20 +243,6 @@ class _LoginState extends State<Login> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget togglePassword() {
-    return IconButton(
-      onPressed: () {
-        setState(() {
-          _isSecurePassword = !_isSecurePassword;
-        });
-      },
-      icon: _isSecurePassword
-          ? const Icon(Icons.visibility_off)
-          : const Icon(Icons.visibility),
-      color: warnaKopi,
     );
   }
 }

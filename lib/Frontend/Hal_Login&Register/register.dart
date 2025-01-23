@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
-import 'package:uas_mobile2/Frontend/Hal_Login&Register/login.dart';
+import 'package:uas_mobile2/Backend/firebase_auth.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class Register extends StatefulWidget {
@@ -11,8 +11,55 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final FirebaseAuthService _authService = FirebaseAuthService();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   bool _isSecurePassword = true;
   bool _isSecureConfirmPassword = true;
+
+  void _registerUser() async {
+    final username = _usernameController.text.trim();
+    final password = _passwordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
+
+    if (username.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Semua kolom harus diisi!")),
+      );
+      return;
+    }
+
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text("Password dan Konfirmasi Password tidak cocok!")),
+      );
+      return;
+    }
+
+    try {
+      await _authService.registerUser(
+        username: username,
+        email: "$username@example.com",
+        password: password,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Berhasil daftar!")),
+        );
+        // Navigate to login screen after successful registration
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Gagal daftar: $e")),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +72,13 @@ class _RegisterState extends State<Register> {
           },
           child: ListView(
             children: [
+              // Bagian Atas
               Container(
-                height: 280,
+                height: 400,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(70.0),
-                    bottomRight: Radius.circular(70.0),
-                  ),
+                      bottomLeft: Radius.circular(70.0),
+                      bottomRight: Radius.circular(70.0)),
                   gradient: LinearGradient(
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
@@ -44,21 +91,20 @@ class _RegisterState extends State<Register> {
                 child: Stack(
                   children: [
                     Positioned(
-                      top: 20,
-                      width: 210,
-                      height: 210,
-                      left: 73,
+                      width: 300,
+                      height: 300,
+                      left: 10,
                       child: Container(
                         decoration: const BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage('assets/image/bg_kopi3.png'),
+                            image: AssetImage('assets/image/bg_kopi.png'),
                           ),
                         ),
                       ),
                     ),
                     Positioned(
                       child: Container(
-                        margin: const EdgeInsets.only(top: 200),
+                        margin: const EdgeInsets.only(top: 280),
                         child: const Center(
                           child: Text(
                             "DAFTAR AKUN",
@@ -75,12 +121,13 @@ class _RegisterState extends State<Register> {
                   ],
                 ),
               ),
+              // Bagian Form Register
               Padding(
                 padding: const EdgeInsets.all(30.0),
                 child: Column(
                   children: [
                     Container(
-                      padding: const EdgeInsets.only(top: 5, left: 5, right: 5),
+                      padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
@@ -95,44 +142,116 @@ class _RegisterState extends State<Register> {
                       child: Column(
                         children: [
                           // Input Username
-                          buildTextField(
-                            hintText: "Username",
-                            icon: Icons.person_3_outlined,
-                            obscureText: false,
-                          ),
-                          // Input Email
-                          buildTextField(
-                            hintText: "Email",
-                            icon: Icons.email_outlined,
-                            obscureText: false,
+                          Container(
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.grey[350] ?? Colors.grey,
+                                ),
+                              ),
+                            ),
+                            child: TextField(
+                              controller: _usernameController,
+                              style:
+                                  const TextStyle(fontFamily: "poppinsregular"),
+                              textCapitalization: TextCapitalization.none,
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(
+                                  Icons.person_3_outlined,
+                                  color: warnaKopi,
+                                ),
+                                border: InputBorder.none,
+                                hintText: "Username",
+                                hintStyle: TextStyle(
+                                    fontFamily: "poppinsregular",
+                                    color: Colors.grey[400]),
+                              ),
+                            ),
                           ),
                           // Input Password
-                          buildTextField(
-                            hintText: "Password",
-                            icon: Icons.lock_outline,
-                            obscureText: _isSecurePassword,
-                            toggle: () => setState(() {
-                              _isSecurePassword = !_isSecurePassword;
-                            }),
+                          Container(
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.grey[350] ?? Colors.grey,
+                                ),
+                              ),
+                            ),
+                            child: TextField(
+                              controller: _passwordController,
+                              obscureText: _isSecurePassword,
+                              style:
+                                  const TextStyle(fontFamily: "poppinsregular"),
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(
+                                  Icons.lock_outline,
+                                  color: warnaKopi,
+                                ),
+                                border: InputBorder.none,
+                                hintText: "Password",
+                                hintStyle: TextStyle(
+                                    fontFamily: "poppinsregular",
+                                    color: Colors.grey[400]),
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isSecurePassword = !_isSecurePassword;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    _isSecurePassword
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                    color: warnaKopi,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                          // Input Konfirmasi Password
-                          buildTextField(
-                            hintText: "Konfirmasi Password",
-                            icon: Icons.lock_outline,
-                            obscureText: _isSecureConfirmPassword,
-                            toggle: () => setState(() {
-                              _isSecureConfirmPassword =
-                                  !_isSecureConfirmPassword;
-                            }),
+                          // Input Confirm Password
+                          Container(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: _confirmPasswordController,
+                              obscureText: _isSecureConfirmPassword,
+                              style:
+                                  const TextStyle(fontFamily: "poppinsregular"),
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(
+                                  Icons.lock_outline,
+                                  color: warnaKopi,
+                                ),
+                                border: InputBorder.none,
+                                hintText: "Konfirmasi Password",
+                                hintStyle: TextStyle(
+                                    fontFamily: "poppinsregular",
+                                    color: Colors.grey[400]),
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isSecureConfirmPassword =
+                                          !_isSecureConfirmPassword;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    _isSecureConfirmPassword
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                    color: warnaKopi,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 30),
+                    // Tombol Register
                     Bounceable(
-                      onTap: () {
-                        // Logika untuk tombol register
-                      },
+                      onTap: _registerUser,
                       child: Container(
                         margin: const EdgeInsets.only(top: 20),
                         height: 50,
@@ -159,13 +278,11 @@ class _RegisterState extends State<Register> {
                       ),
                     ),
                     const SizedBox(height: 50),
+                    // Tombol Kembali
                     Bounceable(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const Login())); // Kembali ke halaman Login
+                        Navigator.pushNamed(
+                            context, '/login'); // Navigate back to login page
                       },
                       child: const Text(
                         "Sudah Punya Akun? LOGIN",
@@ -180,49 +297,6 @@ class _RegisterState extends State<Register> {
                 ),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildTextField({
-    required String hintText,
-    required IconData icon,
-    required bool obscureText,
-    VoidCallback? toggle,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.grey[350] ?? Colors.grey,
-          ),
-        ),
-      ),
-      child: TextField(
-        obscureText: obscureText,
-        style: const TextStyle(fontFamily: "poppinsregular"),
-        decoration: InputDecoration(
-          prefixIcon: Icon(
-            icon,
-            color: warnaKopi,
-          ),
-          suffixIcon: toggle != null
-              ? IconButton(
-                  onPressed: toggle,
-                  icon: Icon(
-                    obscureText ? Icons.visibility_off : Icons.visibility,
-                    color: warnaKopi,
-                  ),
-                )
-              : null,
-          border: InputBorder.none,
-          hintText: hintText,
-          hintStyle: TextStyle(
-            fontFamily: "poppinsregular",
-            color: Colors.grey[400],
           ),
         ),
       ),
