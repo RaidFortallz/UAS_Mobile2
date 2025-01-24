@@ -17,11 +17,11 @@ class _HomeFragmentState extends State<HomeFragment> {
   int _currentIndex = 0;
 
   final List<String> banners = [
-    'assets/image/banner_coffee.png',
-    'assets/image/banner_coffee.png',
-    'assets/image/banner_coffee.png',
-    'assets/image/banner_coffee.png',
-    'assets/image/banner_coffee.png',
+    'assets/image/banner_kopi2.png',
+    'assets/image/banner_kopi4.png',
+    'assets/image/banner_kopi5.png',
+    'assets/image/banner_kopi3.png',
+    'assets/image/banner_kopi.png',
   ];
 
   String categorySelected = 'All Coffee';

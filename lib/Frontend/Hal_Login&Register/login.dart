@@ -200,7 +200,7 @@ class _LoginState extends State<Login> {
                     // Tombol Login
                     Bounceable(
                       onTap: (){
-                        Navigator.pushNamed(context, '/dashboard');
+                        _loginUser();
                       },
                       child: Container(
                         margin: const EdgeInsets.only(top: 20),
