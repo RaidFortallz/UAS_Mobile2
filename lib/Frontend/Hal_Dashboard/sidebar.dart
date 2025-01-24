@@ -73,6 +73,20 @@ class _SidebarPageState extends State<SidebarPage> {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.account_balance_wallet),
+            title: const Text('Saldo'),
+            onTap: () {
+              Navigator.pushNamed(context, '/saldo');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text('Settings'),
+            onTap: () {
+              Navigator.pushNamed(context, '/settings');
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
             onTap: () async {

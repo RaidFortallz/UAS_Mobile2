@@ -21,9 +21,11 @@ class _LoginState extends State<Login> {
     final password = _passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Email dan password harus diisi!")),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Email dan password harus diisi!")),
+        );
+      }
       return;
     }
 
@@ -33,18 +35,22 @@ class _LoginState extends State<Login> {
         password: password,
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Berhasil login!")),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Berhasil login!")),
+        );
 
-      Navigator.pushReplacementNamed(
-        context,
-        '/dashboard', // Redirect ke halaman dashboard
-      );
+        Navigator.pushReplacementNamed(
+          context,
+          '/dashboard', // Redirect ke halaman dashboard
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Gagal login: $e")),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Gagal login: $e")),
+        );
+      }
     }
   }
 

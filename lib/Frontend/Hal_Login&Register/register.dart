@@ -139,126 +139,34 @@ class _RegisterState extends State<Register> {
                       child: Column(
                         children: [
                           // Input Username
-                          Container(
-                            padding: const EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey[350] ?? Colors.grey,
-                                ),
-                              ),
-                            ),
-                            child: TextField(
-                              controller: _usernameController,
-                              style:
-                                  const TextStyle(fontFamily: "poppinsregular"),
-                              textCapitalization: TextCapitalization.none,
-                              decoration: InputDecoration(
-                                prefixIcon: const Icon(
-                                  Icons.person_3_outlined,
-                                  color: warnaKopi,
-                                ),
-                                border: InputBorder.none,
-                                hintText: "Username",
-                                hintStyle: TextStyle(
-                                  fontFamily: "poppinsregular",
-                                  color: Colors.grey[400],
-                                ),
-                              ),
-                            ),
+                          _buildTextField(
+                            controller: _usernameController,
+                            hintText: "Username",
+                            icon: Icons.person_3_outlined,
                           ),
                           // Input Email
-                          Container(
-                            padding: const EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey[350] ?? Colors.grey,
-                                ),
-                              ),
-                            ),
-                            child: TextField(
-                              controller: _emailController,
-                              style:
-                                  const TextStyle(fontFamily: "poppinsregular"),
-                              textCapitalization: TextCapitalization.none,
-                              decoration: InputDecoration(
-                                prefixIcon: const Icon(
-                                  Icons.email_outlined,
-                                  color: warnaKopi,
-                                ),
-                                border: InputBorder.none,
-                                hintText: "Email",
-                                hintStyle: TextStyle(
-                                  fontFamily: "poppinsregular",
-                                  color: Colors.grey[400],
-                                ),
-                              ),
-                            ),
+                          _buildTextField(
+                            controller: _emailController,
+                            hintText: "Email",
+                            icon: Icons.email_outlined,
                           ),
                           // Input Phone Number
-                          Container(
-                            padding: const EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey[350] ?? Colors.grey,
-                                ),
-                              ),
-                            ),
-                            child: TextField(
-                              controller: _phoneController,
-                              keyboardType: TextInputType.phone,
-                              style:
-                                  const TextStyle(fontFamily: "poppinsregular"),
-                              decoration: InputDecoration(
-                                prefixIcon: const Icon(
-                                  Icons.phone_android_outlined,
-                                  color: warnaKopi,
-                                ),
-                                border: InputBorder.none,
-                                hintText: "Nomor HP",
-                                hintStyle: TextStyle(
-                                  fontFamily: "poppinsregular",
-                                  color: Colors.grey[400],
-                                ),
-                              ),
-                            ),
+                          _buildTextField(
+                            controller: _phoneController,
+                            hintText: "Nomor HP",
+                            icon: Icons.phone_android_outlined,
+                            keyboardType: TextInputType.phone,
                           ),
                           // Input Password
-                          Container(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: _passwordController,
-                              obscureText: _isSecurePassword,
-                              style:
-                                  const TextStyle(fontFamily: "poppinsregular"),
-                              decoration: InputDecoration(
-                                prefixIcon: const Icon(
-                                  Icons.lock_outline,
-                                  color: warnaKopi,
-                                ),
-                                border: InputBorder.none,
-                                hintText: "Password",
-                                hintStyle: TextStyle(
-                                  fontFamily: "poppinsregular",
-                                  color: Colors.grey[400],
-                                ),
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isSecurePassword = !_isSecurePassword;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    _isSecurePassword
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    color: warnaKopi,
-                                  ),
-                                ),
-                              ),
-                            ),
+                          _buildPasswordField(
+                            controller: _passwordController,
+                            hintText: "Password",
+                            isSecure: _isSecurePassword,
+                            toggleSecure: () {
+                              setState(() {
+                                _isSecurePassword = !_isSecurePassword;
+                              });
+                            },
                           ),
                         ],
                       ),
@@ -317,24 +225,27 @@ class _RegisterState extends State<Register> {
     );
   }
 
+  // Membuat text field umum untuk username, email, dan nomor HP
   Widget _buildTextField({
     required TextEditingController controller,
     required String hintText,
     required IconData icon,
+    TextInputType keyboardType = TextInputType.text,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: const Color(0xffF9F9F9),
+        border: Border(
+          bottom: BorderSide(color: Colors.grey[350] ?? Colors.grey),
+        ),
       ),
       child: TextField(
         controller: controller,
+        keyboardType: keyboardType,
         style: const TextStyle(fontFamily: "poppinsregular"),
         decoration: InputDecoration(
-          border: InputBorder.none,
           prefixIcon: Icon(icon, color: warnaKopi),
+          border: InputBorder.none,
           hintText: hintText,
           hintStyle: const TextStyle(
             fontFamily: "poppinsregular",
@@ -345,6 +256,7 @@ class _RegisterState extends State<Register> {
     );
   }
 
+  // Membuat password field
   Widget _buildPasswordField({
     required TextEditingController controller,
     required String hintText,
@@ -352,19 +264,19 @@ class _RegisterState extends State<Register> {
     required VoidCallback toggleSecure,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: const Color(0xffF9F9F9),
+        border: Border(
+          bottom: BorderSide(color: Colors.grey[350] ?? Colors.grey),
+        ),
       ),
       child: TextField(
         controller: controller,
         obscureText: isSecure,
         style: const TextStyle(fontFamily: "poppinsregular"),
         decoration: InputDecoration(
-          border: InputBorder.none,
           prefixIcon: const Icon(Icons.lock_outlined, color: warnaKopi),
+          border: InputBorder.none,
           hintText: hintText,
           hintStyle: const TextStyle(
             fontFamily: "poppinsregular",
