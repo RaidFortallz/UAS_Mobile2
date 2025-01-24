@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -31,8 +32,12 @@ class FirebaseAuthService {
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      print("User registered: $email");
+      log("User registered successfully", name: "FirebaseAuthService");
+      log("Email: $email", name: "FirebaseAuthService");
     } catch (e) {
+      // Logging error
+      log("Error during registration: $e",
+          level: 1000, name: "FirebaseAuthService");
       throw Exception("Error during registration: $e");
     }
   }
@@ -48,8 +53,11 @@ class FirebaseAuthService {
         password: password,
       );
 
-      print("User logged in: $email");
+      log("User logged in successfully", name: "FirebaseAuthService");
+      log("Email: $email", name: "FirebaseAuthService");
     } catch (e) {
+      // Logging error
+      log("Error during login: $e", level: 1000, name: "FirebaseAuthService");
       throw Exception("Error during login: $e");
     }
   }
@@ -58,8 +66,11 @@ class FirebaseAuthService {
   Future<void> logout() async {
     try {
       await _firebaseAuth.signOut();
-      print("User logged out");
+
+      log("User logged out successfully", name: "FirebaseAuthService");
     } catch (e) {
+      // Logging error
+      log("Error during logout: $e", level: 1000, name: "FirebaseAuthService");
       throw Exception("Error during logout: $e");
     }
   }
@@ -72,5 +83,10 @@ class FirebaseAuthService {
   // Mengecek apakah user sudah login
   bool isUserLoggedIn() {
     return _firebaseAuth.currentUser != null;
+  }
+
+  void signOut() {
+    log("signOut method called but not implemented",
+        name: "FirebaseAuthService");
   }
 }

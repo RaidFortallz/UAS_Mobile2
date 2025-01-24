@@ -13,8 +13,8 @@ class SidebarPage extends StatefulWidget {
 }
 
 class _SidebarPageState extends State<SidebarPage> {
-  String username = 'Pengguna'; // Default value
-  String email = 'email@contoh.com'; // Default value
+  String username = 'Pengguna';
+  String email = 'email@contoh.com';
 
   final FirebaseAuthService authService = FirebaseAuthService();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -36,12 +36,8 @@ class _SidebarPageState extends State<SidebarPage> {
           email = userDoc['email'] ?? 'email@contoh.com';
         });
       } catch (e) {
-        // Removed print statements
         if (e is FirebaseException) {
-          // Handle Firebase error here, but don't print
-        } else {
-          // Handle unknown error here, but don't print
-        }
+        } else {}
       }
     }
   }
