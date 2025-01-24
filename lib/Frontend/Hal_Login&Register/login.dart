@@ -81,7 +81,7 @@ class _LoginState extends State<Login> {
                     Positioned(
                       width: 300,
                       height: 300,
-                      left: 10,
+                      left: 47,
                       child: Container(
                         decoration: const BoxDecoration(
                           image: DecorationImage(
@@ -199,7 +199,7 @@ class _LoginState extends State<Login> {
                     const SizedBox(height: 30),
                     // Tombol Login
                     Bounceable(
-                      onTap: (){
+                      onTap: () {
                         _loginUser();
                       },
                       child: Container(
@@ -231,8 +231,8 @@ class _LoginState extends State<Login> {
                     // Tombol Daftar
                     Bounceable(
                       onTap: () {
-                        Navigator.pushNamed(
-                            context, '/register'); // Arahkan ke halaman register
+                        Navigator.pushNamed(context,
+                            '/register'); // Arahkan ke halaman register
                       },
                       child: const Text(
                         "Belum Punya Akun? REGISTER",

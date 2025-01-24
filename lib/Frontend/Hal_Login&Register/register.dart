@@ -89,7 +89,7 @@ class _RegisterState extends State<Register> {
                     Positioned(
                       width: 210,
                       height: 210,
-                      left: 73,
+                      left: 90,
                       top: 20,
                       child: Container(
                         decoration: const BoxDecoration(
