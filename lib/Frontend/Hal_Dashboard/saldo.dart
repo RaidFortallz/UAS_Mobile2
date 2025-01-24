@@ -73,39 +73,35 @@ class _SaldoPageState extends State<SaldoPage> {
                     const Icon(Icons.account_balance_wallet,
                         size: 100, color: warnaKopi3),
                     const SizedBox(height: 20),
-                    // Modernized "Saldo Anda" text
                     Text(
                       'Saldo Anda',
                       style: TextStyle(
                         fontSize: 30,
-                        fontWeight: FontWeight.w700, // Bold with a modern touch
-                        letterSpacing: 1.5, // Add spacing between letters
-                        color: Colors.black.withOpacity(0.7), // Softer black
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 1.5,
+                        color: Colors.black.withOpacity(0.7),
                         shadows: [
                           Shadow(
-                            offset: Offset(2, 2),
+                            offset: const Offset(2, 2),
                             blurRadius: 4,
-                            color: Colors.grey.withOpacity(
-                                0.5), // Shadow effect for modern look
+                            color: Colors.grey.withOpacity(0.5),
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 12),
-                    // Modernized Saldo text with larger font and additional styling
                     Text(
                       'Rp ${saldo.toStringAsFixed(0)}',
                       style: TextStyle(
                         fontSize: 42,
                         fontWeight: FontWeight.bold,
-                        color: warnaKopi3, // Still using the kopi3 color
-                        letterSpacing: 1.5, // Add spacing between digits
+                        color: warnaKopi3,
+                        letterSpacing: 1.5,
                         shadows: [
                           Shadow(
-                            offset: Offset(2, 2),
+                            offset: const Offset(2, 2),
                             blurRadius: 6,
-                            color: Colors.grey
-                                .withOpacity(0.4), // Subtle shadow for effect
+                            color: Colors.grey.withOpacity(0.4),
                           ),
                         ],
                       ),

@@ -37,7 +37,9 @@ class _SidebarPageState extends State<SidebarPage> {
         });
       } catch (e) {
         if (e is FirebaseException) {
-        } else {}
+        } else {
+          // Handle any other errors
+        }
       }
     }
   }
@@ -49,16 +51,31 @@ class _SidebarPageState extends State<SidebarPage> {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: const BoxDecoration(color: warnaKopi3),
+            decoration: const BoxDecoration(
+              color: warnaKopi3,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.person, size: 80, color: Colors.white),
-                const SizedBox(height: 8),
+                const CircleAvatar(
+                  radius: 35,
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    Icons.person,
+                    size: 40,
+                    color: warnaKopi2,
+                  ),
+                ),
+                const SizedBox(height: 10),
                 Text(
                   username,
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
@@ -72,23 +89,29 @@ class _SidebarPageState extends State<SidebarPage> {
               ],
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.account_balance_wallet),
-            title: const Text('Saldo'),
+          const SizedBox(height: 20),
+          // Item Menu
+          _buildMenuItem(
+            context,
+            icon: Icons.account_balance_wallet,
+            title: 'Saldo',
             onTap: () {
               Navigator.pushNamed(context, '/saldo');
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
+          _buildMenuItem(
+            context,
+            icon: Icons.settings,
+            title: 'Settings',
             onTap: () {
               Navigator.pushNamed(context, '/settings');
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Logout'),
+          const Divider(),
+          _buildMenuItem(
+            context,
+            icon: Icons.logout,
+            title: 'Logout',
             onTap: () async {
               try {
                 await authService.logout();
@@ -111,6 +134,29 @@ class _SidebarPageState extends State<SidebarPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildMenuItem(BuildContext context,
+      {required IconData icon,
+      required String title,
+      required Function() onTap}) {
+    return ListTile(
+      leading: Icon(
+        icon,
+        size: 30,
+        color: warnaKopi3,
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: Colors.black87,
+        ),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      onTap: onTap,
     );
   }
 }
