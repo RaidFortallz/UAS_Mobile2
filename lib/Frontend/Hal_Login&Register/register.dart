@@ -13,28 +13,23 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final FirebaseAuthService _authService = FirebaseAuthService();
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
   bool _isSecurePassword = true;
-  bool _isSecureConfirmPassword = true;
 
   void _registerUser() async {
     final username = _usernameController.text.trim();
+    final email = _emailController.text.trim();
+    final phoneNumber = _phoneController.text.trim();
     final password = _passwordController.text.trim();
-    final confirmPassword = _confirmPasswordController.text.trim();
 
-    if (username.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+    if (username.isEmpty ||
+        email.isEmpty ||
+        phoneNumber.isEmpty ||
+        password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Semua kolom harus diisi!")),
-      );
-      return;
-    }
-
-    if (password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text("Password dan Konfirmasi Password tidak cocok!")),
       );
       return;
     }
@@ -42,14 +37,14 @@ class _RegisterState extends State<Register> {
     try {
       await _authService.registerUser(
         username: username,
-        email: "$username@example.com",
+        email: email,
         password: password,
+        phoneNumber: phoneNumber,
       );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Berhasil daftar!")),
         );
-        // Navigate to login screen after successful registration
         Navigator.pushReplacementNamed(context, '/login');
       }
     } catch (e) {
@@ -74,11 +69,12 @@ class _RegisterState extends State<Register> {
             children: [
               // Bagian Atas
               Container(
-                height: 400,
+                height: 280,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(70.0),
-                      bottomRight: Radius.circular(70.0)),
+                    bottomLeft: Radius.circular(70.0),
+                    bottomRight: Radius.circular(70.0),
+                  ),
                   gradient: LinearGradient(
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
@@ -91,20 +87,21 @@ class _RegisterState extends State<Register> {
                 child: Stack(
                   children: [
                     Positioned(
-                      width: 300,
-                      height: 300,
-                      left: 10,
+                      width: 210,
+                      height: 210,
+                      left: 73,
+                      top: 20,
                       child: Container(
                         decoration: const BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage('assets/image/bg_kopi.png'),
+                            image: AssetImage('assets/image/bg_kopi3.png'),
                           ),
                         ),
                       ),
                     ),
                     Positioned(
                       child: Container(
-                        margin: const EdgeInsets.only(top: 280),
+                        margin: const EdgeInsets.only(top: 200),
                         child: const Center(
                           child: Text(
                             "DAFTAR AKUN",
@@ -164,12 +161,13 @@ class _RegisterState extends State<Register> {
                                 border: InputBorder.none,
                                 hintText: "Username",
                                 hintStyle: TextStyle(
-                                    fontFamily: "poppinsregular",
-                                    color: Colors.grey[400]),
+                                  fontFamily: "poppinsregular",
+                                  color: Colors.grey[400],
+                                ),
                               ),
                             ),
                           ),
-                          // Input Password
+                          // Input Email
                           Container(
                             padding: const EdgeInsets.all(8.0),
                             decoration: BoxDecoration(
@@ -179,6 +177,57 @@ class _RegisterState extends State<Register> {
                                 ),
                               ),
                             ),
+                            child: TextField(
+                              controller: _emailController,
+                              style:
+                                  const TextStyle(fontFamily: "poppinsregular"),
+                              textCapitalization: TextCapitalization.none,
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(
+                                  Icons.email_outlined,
+                                  color: warnaKopi,
+                                ),
+                                border: InputBorder.none,
+                                hintText: "Email",
+                                hintStyle: TextStyle(
+                                  fontFamily: "poppinsregular",
+                                  color: Colors.grey[400],
+                                ),
+                              ),
+                            ),
+                          ),
+                          // Input Phone Number
+                          Container(
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.grey[350] ?? Colors.grey,
+                                ),
+                              ),
+                            ),
+                            child: TextField(
+                              controller: _phoneController,
+                              keyboardType: TextInputType.phone,
+                              style:
+                                  const TextStyle(fontFamily: "poppinsregular"),
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(
+                                  Icons.phone_android_outlined,
+                                  color: warnaKopi,
+                                ),
+                                border: InputBorder.none,
+                                hintText: "Nomor HP",
+                                hintStyle: TextStyle(
+                                  fontFamily: "poppinsregular",
+                                  color: Colors.grey[400],
+                                ),
+                              ),
+                            ),
+                          ),
+                          // Input Password
+                          Container(
+                            padding: const EdgeInsets.all(8.0),
                             child: TextField(
                               controller: _passwordController,
                               obscureText: _isSecurePassword,
@@ -192,8 +241,9 @@ class _RegisterState extends State<Register> {
                                 border: InputBorder.none,
                                 hintText: "Password",
                                 hintStyle: TextStyle(
-                                    fontFamily: "poppinsregular",
-                                    color: Colors.grey[400]),
+                                  fontFamily: "poppinsregular",
+                                  color: Colors.grey[400],
+                                ),
                                 suffixIcon: IconButton(
                                   onPressed: () {
                                     setState(() {
@@ -202,41 +252,6 @@ class _RegisterState extends State<Register> {
                                   },
                                   icon: Icon(
                                     _isSecurePassword
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    color: warnaKopi,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          // Input Confirm Password
-                          Container(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: _confirmPasswordController,
-                              obscureText: _isSecureConfirmPassword,
-                              style:
-                                  const TextStyle(fontFamily: "poppinsregular"),
-                              decoration: InputDecoration(
-                                prefixIcon: const Icon(
-                                  Icons.lock_outline,
-                                  color: warnaKopi,
-                                ),
-                                border: InputBorder.none,
-                                hintText: "Konfirmasi Password",
-                                hintStyle: TextStyle(
-                                    fontFamily: "poppinsregular",
-                                    color: Colors.grey[400]),
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isSecureConfirmPassword =
-                                          !_isSecureConfirmPassword;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    _isSecureConfirmPassword
                                         ? Icons.visibility_off
                                         : Icons.visibility,
                                     color: warnaKopi,
@@ -281,8 +296,7 @@ class _RegisterState extends State<Register> {
                     // Tombol Kembali
                     Bounceable(
                       onTap: () {
-                        Navigator.pushNamed(
-                            context, '/login'); // Navigate back to login page
+                        Navigator.pushNamed(context, '/login');
                       },
                       child: const Text(
                         "Sudah Punya Akun? LOGIN",
@@ -297,6 +311,71 @@ class _RegisterState extends State<Register> {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    required IconData icon,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: const Color(0xffF9F9F9),
+      ),
+      child: TextField(
+        controller: controller,
+        style: const TextStyle(fontFamily: "poppinsregular"),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          prefixIcon: Icon(icon, color: warnaKopi),
+          hintText: hintText,
+          hintStyle: const TextStyle(
+            fontFamily: "poppinsregular",
+            color: Colors.grey,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordField({
+    required TextEditingController controller,
+    required String hintText,
+    required bool isSecure,
+    required VoidCallback toggleSecure,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: const Color(0xffF9F9F9),
+      ),
+      child: TextField(
+        controller: controller,
+        obscureText: isSecure,
+        style: const TextStyle(fontFamily: "poppinsregular"),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          prefixIcon: const Icon(Icons.lock_outlined, color: warnaKopi),
+          hintText: hintText,
+          hintStyle: const TextStyle(
+            fontFamily: "poppinsregular",
+            color: Colors.grey,
+          ),
+          suffixIcon: IconButton(
+            onPressed: toggleSecure,
+            icon: Icon(
+              isSecure ? Icons.visibility_off : Icons.visibility,
+              color: warnaKopi,
+            ),
           ),
         ),
       ),

@@ -10,6 +10,7 @@ class FirebaseAuthService {
     required String username,
     required String email,
     required String password,
+    required String phoneNumber,
   }) async {
     try {
       // Membuat user dengan email dan password
@@ -19,32 +20,29 @@ class FirebaseAuthService {
         password: password,
       );
 
-      // Menyimpan username ke profil user Firebase
-      await userCredential.user?.updateDisplayName(username);
+      // Ambil UID dari user
+      String uid = userCredential.user!.uid;
 
-      // Menyimpan username dan email di Firestore
-      await _firestore.collection('users').doc(userCredential.user?.uid).set({
+      // Simpan data tambahan ke Firestore dengan UID sebagai Document ID
+      await _firestore.collection('users').doc(uid).set({
         'username': username,
         'email': email,
+        'phoneNumber': phoneNumber,
+        'createdAt': FieldValue.serverTimestamp(),
       });
 
-      // User berhasil didaftarkan
-      print("User registered: ${userCredential.user?.email}");
+      print("User registered: $email");
     } catch (e) {
       throw Exception("Error during registration: $e");
     }
   }
 
-  // Fungsi untuk login user menggunakan username dan password
-  Future<void> loginWithUsername({
-    required String username,
-    required String password,
+  // Fungsi untuk login user menggunakan email dan password
+  Future<void> loginWithEmail({
     required String email,
+    required String password,
   }) async {
     try {
-      // Ubah username menjadi pola email agar dapat diproses Firebase
-      final email = "$username@example.com";
-
       await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,

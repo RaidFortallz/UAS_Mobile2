@@ -12,33 +12,38 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final FirebaseAuthService _authService = FirebaseAuthService();
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isSecurePassword = true;
 
   void _loginUser() async {
-    final username = _usernameController.text.trim();
+    final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    if (username.isEmpty || password.isEmpty) {
+    if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Username dan password harus diisi!")),
+        const SnackBar(content: Text("Email dan password harus diisi!")),
       );
       return;
     }
 
     try {
-      await _authService.loginWithUsername(
-        username: username,
-        email: "$username@example.com",
+      await _authService.loginWithEmail(
+        email: email,
         password: password,
       );
 
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Berhasil login!")),
+      );
+
       Navigator.pushReplacementNamed(
-          context, '/dashboard'); // Redirect ke dashboard
+        context,
+        '/dashboard', // Redirect ke halaman dashboard
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
+        SnackBar(content: Text("Gagal login: $e")),
       );
     }
   }
@@ -124,7 +129,7 @@ class _LoginState extends State<Login> {
                       ),
                       child: Column(
                         children: [
-                          // Input Username
+                          // Input Email
                           Container(
                             padding: const EdgeInsets.all(8.0),
                             decoration: BoxDecoration(
@@ -135,17 +140,17 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                             child: TextField(
-                              controller: _usernameController,
+                              controller: _emailController,
                               style:
                                   const TextStyle(fontFamily: "poppinsregular"),
                               textCapitalization: TextCapitalization.none,
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(
-                                  Icons.person_3_outlined,
+                                  Icons.email_outlined,
                                   color: warnaKopi,
                                 ),
                                 border: InputBorder.none,
-                                hintText: "Username",
+                                hintText: "Email",
                                 hintStyle: TextStyle(
                                   fontFamily: "poppinsregular",
                                   color: Colors.grey[400],
@@ -194,7 +199,9 @@ class _LoginState extends State<Login> {
                     const SizedBox(height: 30),
                     // Tombol Login
                     Bounceable(
-                      onTap: _loginUser,
+                      onTap: (){
+                        Navigator.pushNamed(context, '/dashboard');
+                      },
                       child: Container(
                         margin: const EdgeInsets.only(top: 20),
                         height: 50,
@@ -224,8 +231,8 @@ class _LoginState extends State<Login> {
                     // Tombol Daftar
                     Bounceable(
                       onTap: () {
-                        Navigator.pushNamed(context,
-                            '/register'); // Arahkan ke halaman register
+                        Navigator.pushNamed(
+                            context, '/register'); // Arahkan ke halaman register
                       },
                       child: const Text(
                         "Belum Punya Akun? REGISTER",

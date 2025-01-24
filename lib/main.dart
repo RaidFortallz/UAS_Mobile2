@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
           '/dashboard': (context) => const DashboardPage(),
           '/register': (context) => const Register(),
           '/login': (context) => const Login(),
-          'detail': (context) {
+          '/detail': (context) {
             Coffee coffee =
                 ModalRoute.of(context)!.settings.arguments as Coffee;
             return DetailCoffee(coffee: coffee);
