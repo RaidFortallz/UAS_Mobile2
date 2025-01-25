@@ -256,6 +256,8 @@ class _LoginState extends State<Login> {
                       onTap: () {
                         Navigator.pushNamed(context,
                             '/register'); // Arahkan ke halaman register
+                        Navigator.pushNamed(context,
+                            '/register'); // Arahkan ke halaman register
                       },
                       child: const Text(
                         "Belum Punya Akun? REGISTER",

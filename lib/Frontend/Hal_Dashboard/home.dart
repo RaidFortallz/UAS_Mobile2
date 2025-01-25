@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:uas_mobile2/Backend/firebase_auth.dart';
+import 'package:uas_mobile2/Frontend/Hal_Dashboard/sidebar.dart';
 import 'package:uas_mobile2/Models/coffee.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
@@ -14,7 +18,14 @@ class HomeFragment extends StatefulWidget {
 }
 
 class _HomeFragmentState extends State<HomeFragment> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _currentIndex = 0;
+  String categorySelected = 'All Coffee';
+  String username = '';
+
+  // Instansiasi FirebaseAuthService dan FirebaseFirestore
+  final FirebaseAuthService _authService = FirebaseAuthService();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final List<String> banners = [
     'assets/image/banner_kopi1.png',
@@ -24,40 +35,61 @@ class _HomeFragmentState extends State<HomeFragment> {
     'assets/image/banner_kopi5.png',
   ];
 
-  String categorySelected = 'All Coffee';
+  @override
+  void initState() {
+    super.initState();
+    _getUserInfo();
+  }
+
+  Future<void> _getUserInfo() async {
+    User? user = _authService.getCurrentUser();
+
+    if (user != null) {
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(user.uid).get();
+
+      setState(() {
+        username = userDoc['username'] ?? 'Pengguna';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(0),
-      children: [
-        Stack(
-          children: [
-            buildBackground(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
-                  const Gap(68),
-                  buildHeader(),
-                  const Gap(30),
-                  buildSearch(),
-                  const Gap(24),
-                ],
+    return Scaffold(
+      key: _scaffoldKey, // Assign the GlobalKey to Scaffold
+      drawer: const SidebarPage(), // Set the Sidebar as the Drawer
+      body: ListView(
+        padding: const EdgeInsets.all(0),
+        children: [
+          Stack(
+            children: [
+              buildBackground(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    const Gap(68),
+                    buildHeader(),
+                    const Gap(30),
+                    buildSearch(),
+                    const Gap(24),
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 221),
-              child: buildBannerPromo(),
-            )
-          ],
-        ),
-        const Gap(20),
-        buildCategories(),
-        const Gap(16),
-        buildGridCoffee(),
-        const Gap(30)
-      ],
+              Padding(
+                padding: const EdgeInsets.only(top: 221),
+                child: buildBannerPromo(),
+              )
+            ],
+          ),
+          const Gap(20),
+          buildCategories(),
+          const Gap(16),
+          buildGridCoffee(),
+          const Gap(30)
+        ],
+      ),
     );
   }
 
@@ -78,29 +110,37 @@ class _HomeFragmentState extends State<HomeFragment> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'SELAMAT DATANG',
-          style: TextStyle(
-              fontFamily: "poppinsregular", fontSize: 14, color: warnaAbu),
-        ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'USER',
-              style: TextStyle(
-                  fontFamily: "poppinsregular",
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                  color: warnaAbu2),
+            IconButton(
+              icon: const Icon(Icons.menu, color: warnaAbu),
+              onPressed: () {
+                _scaffoldKey.currentState?.openDrawer(); // Open the drawer
+              },
             ),
-            const Gap(4),
-            Image.asset(
-              'assets/image/ic_arrow_down.png',
-              height: 16,
-              width: 16,
-            )
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const Text(
+                  'SELAMAT DATANG',
+                  style: TextStyle(
+                      fontFamily: "poppinsregular",
+                      fontSize: 14,
+                      color: warnaAbu),
+                ),
+                Text(
+                  username.isEmpty ? 'USER' : username,
+                  style: const TextStyle(
+                      fontFamily: "poppinsregular",
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: warnaAbu2),
+                ),
+              ],
+            ),
           ],
-        )
+        ),
       ],
     );
   }
@@ -377,9 +417,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                   children: [
                     Text(
                       NumberFormat.currency(
-                              decimalDigits: 0,
-                               locale: 'id_ID',
-                               symbol: 'Rp')
+                              decimalDigits: 0, locale: 'id_ID', symbol: 'Rp')
                           .format(coffee.price),
                       style: const TextStyle(
                         fontFamily: "poppinsregular",
@@ -396,7 +434,12 @@ class _HomeFragmentState extends State<HomeFragment> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           color: warnaKopi3,
-                        ), child: const Icon(Icons.add, color: Colors.white, size: 18,),
+                        ),
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                          size: 18,
+                        ),
                       ),
                     )
                   ],

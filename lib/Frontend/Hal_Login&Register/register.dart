@@ -102,7 +102,7 @@ class _RegisterState extends State<Register> {
                     Positioned(
                       width: 210,
                       height: 210,
-                      left: 73,
+                      left: 90,
                       top: 20,
                       child: Container(
                         decoration: const BoxDecoration(
@@ -335,20 +335,22 @@ class _RegisterState extends State<Register> {
     required TextEditingController controller,
     required String hintText,
     required IconData icon,
+    TextInputType keyboardType = TextInputType.text,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: const Color(0xffF9F9F9),
+        border: Border(
+          bottom: BorderSide(color: Colors.grey[350] ?? Colors.grey),
+        ),
       ),
       child: TextField(
         controller: controller,
+        keyboardType: keyboardType,
         style: const TextStyle(fontFamily: "poppinsregular"),
         decoration: InputDecoration(
-          border: InputBorder.none,
           prefixIcon: Icon(icon, color: warnaKopi),
+          border: InputBorder.none,
           hintText: hintText,
           hintStyle: const TextStyle(
             fontFamily: "poppinsregular",
@@ -366,19 +368,19 @@ class _RegisterState extends State<Register> {
     required VoidCallback toggleSecure,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: const Color(0xffF9F9F9),
+        border: Border(
+          bottom: BorderSide(color: Colors.grey[350] ?? Colors.grey),
+        ),
       ),
       child: TextField(
         controller: controller,
         obscureText: isSecure,
         style: const TextStyle(fontFamily: "poppinsregular"),
         decoration: InputDecoration(
-          border: InputBorder.none,
           prefixIcon: const Icon(Icons.lock_outlined, color: warnaKopi),
+          border: InputBorder.none,
           hintText: hintText,
           hintStyle: const TextStyle(
             fontFamily: "poppinsregular",

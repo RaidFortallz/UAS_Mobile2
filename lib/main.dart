@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:uas_mobile2/Backend/firebase_auth.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/dashboard.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/detail_coffee.dart';
+import 'package:uas_mobile2/Frontend/Hal_Dashboard/saldo.dart';
+import 'package:uas_mobile2/Frontend/Hal_Dashboard/settings.dart';
 import 'package:uas_mobile2/Frontend/Hal_Login&Register/login.dart';
 import 'package:uas_mobile2/Frontend/Hal_Login&Register/register.dart';
 import 'package:uas_mobile2/Frontend/Splashscreen/splashcreen.dart';
@@ -45,6 +47,8 @@ class _MyAppState extends State<MyApp> {
           '/dashboard': (context) => const DashboardPage(),
           '/register': (context) => const Register(),
           '/login': (context) => const Login(),
+          '/saldo': (context) => const SaldoPage(),
+          '/settings': (context) => const SettingsPage(),
           '/detail': (context) {
             Coffee coffee =
                 ModalRoute.of(context)!.settings.arguments as Coffee;
