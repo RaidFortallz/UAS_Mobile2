@@ -1,6 +1,8 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:uas_mobile2/Backend/firebase_auth.dart';
+import 'package:uas_mobile2/Frontend/PopUp_Dialog/awesome_dialog.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class Login extends StatefulWidget {
@@ -12,39 +14,60 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final FirebaseAuthService _authService = FirebaseAuthService();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isSecurePassword = true;
 
   void _loginUser() async {
-    final email = _emailController.text.trim();
+    final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
 
-    if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Email dan password harus diisi!")),
+    if (username.isEmpty || password.isEmpty) {
+      CustomDialog.showDialog(
+        context: context,
+        dialogType: DialogType.warning,
+        title: "Perhatian",
+        desc: "Username dan password harus diisi",
       );
       return;
     }
 
     try {
-      await _authService.loginWithEmail(
-        email: email,
-        password: password,
-      );
+      final email = await _authService.getEmailByUsername(username);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Berhasil login!")),
-      );
+      if (email == null) {
+        if (mounted) {
+          CustomDialog.showDialog(
+            context: context,
+            dialogType: DialogType.error,
+            title: "Error",
+            desc: "Username belum terdaftar!",
+          );
+        }
+        return;
+      }
 
-      Navigator.pushReplacementNamed(
-        context,
-        '/dashboard', // Redirect ke halaman dashboard
-      );
+      await _authService.loginWithEmail(email: email, password: password);
+
+      if (mounted) {
+        CustomDialog.showDialog(
+            context: context,
+            dialogType: DialogType.success,
+            title: "Sukses",
+            desc: "Login Berhasil",
+            btnOkOnPress: () {
+              Navigator.pushReplacementNamed(context, '/dashboard');
+            });
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Gagal login: $e")),
-      );
+      if (mounted) {
+        CustomDialog.showDialog(
+          context: context,
+          dialogType: DialogType.error,
+          title: "Gagal",
+          desc: "Gagal login: $e",
+        );
+      }
     }
   }
 
@@ -129,7 +152,7 @@ class _LoginState extends State<Login> {
                       ),
                       child: Column(
                         children: [
-                          // Input Email
+                          // Input Username
                           Container(
                             padding: const EdgeInsets.all(8.0),
                             decoration: BoxDecoration(
@@ -140,17 +163,17 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                             child: TextField(
-                              controller: _emailController,
-                              style:
-                                  const TextStyle(fontFamily: "poppinsregular"),
+                              controller: _usernameController,
+                              style: const TextStyle(
+                                  fontFamily: "poppinsregular", fontSize: 15),
                               textCapitalization: TextCapitalization.none,
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(
-                                  Icons.email_outlined,
+                                  Icons.person_3_outlined,
                                   color: warnaKopi,
                                 ),
                                 border: InputBorder.none,
-                                hintText: "Email",
+                                hintText: "Username",
                                 hintStyle: TextStyle(
                                   fontFamily: "poppinsregular",
                                   color: Colors.grey[400],
@@ -164,8 +187,8 @@ class _LoginState extends State<Login> {
                             child: TextField(
                               controller: _passwordController,
                               obscureText: _isSecurePassword,
-                              style:
-                                  const TextStyle(fontFamily: "poppinsregular"),
+                              style: const TextStyle(
+                                  fontFamily: "poppinsregular", fontSize: 15),
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(
                                   Icons.lock_outline,
@@ -199,7 +222,7 @@ class _LoginState extends State<Login> {
                     const SizedBox(height: 30),
                     // Tombol Login
                     Bounceable(
-                      onTap: (){
+                      onTap: () {
                         _loginUser();
                       },
                       child: Container(
@@ -231,8 +254,8 @@ class _LoginState extends State<Login> {
                     // Tombol Daftar
                     Bounceable(
                       onTap: () {
-                        Navigator.pushNamed(
-                            context, '/register'); // Arahkan ke halaman register
+                        Navigator.pushNamed(context,
+                            '/register'); // Arahkan ke halaman register
                       },
                       child: const Text(
                         "Belum Punya Akun? REGISTER",

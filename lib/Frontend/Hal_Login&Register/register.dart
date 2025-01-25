@@ -1,6 +1,8 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:uas_mobile2/Backend/firebase_auth.dart';
+import 'package:uas_mobile2/Frontend/PopUp_Dialog/awesome_dialog.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class Register extends StatefulWidget {
@@ -12,24 +14,27 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final FirebaseAuthService _authService = FirebaseAuthService();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameControllerReg = TextEditingController();
+  final TextEditingController _emailControllerReg = TextEditingController();
+  final TextEditingController _phoneControllerReg = TextEditingController();
+  final TextEditingController _passwordControllerReg = TextEditingController();
   bool _isSecurePassword = true;
 
   void _registerUser() async {
-    final username = _usernameController.text.trim();
-    final email = _emailController.text.trim();
-    final phoneNumber = _phoneController.text.trim();
-    final password = _passwordController.text.trim();
+    final username = _usernameControllerReg.text.trim();
+    final email = _emailControllerReg.text.trim();
+    final phoneNumber = _phoneControllerReg.text.trim();
+    final password = _passwordControllerReg.text.trim();
 
     if (username.isEmpty ||
         email.isEmpty ||
         phoneNumber.isEmpty ||
         password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Semua kolom harus diisi!")),
+      CustomDialog.showDialog(
+        context: context,
+        dialogType: DialogType.warning,
+        title: "Perhatian",
+        desc: "Semua kolom harus diisi",
       );
       return;
     }
@@ -42,15 +47,23 @@ class _RegisterState extends State<Register> {
         phoneNumber: phoneNumber,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Berhasil daftar!")),
-        );
-        Navigator.pushReplacementNamed(context, '/login');
+        CustomDialog.showDialog(
+            context: context,
+            dialogType: DialogType.success,
+            title: "Sukses",
+            desc: "Berhasil Daftar",
+            btnOkOnPress: () {
+              Navigator.pushReplacementNamed(context, '/login');
+            }
+            );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Gagal daftar: $e")),
+        CustomDialog.showDialog(
+          context: context,
+          dialogType: DialogType.error,
+          title: "Gagal",
+          desc: "Gagal Daftar: $e",
         );
       }
     }
@@ -149,9 +162,9 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                             child: TextField(
-                              controller: _usernameController,
-                              style:
-                                  const TextStyle(fontFamily: "poppinsregular"),
+                              controller: _usernameControllerReg,
+                              style: const TextStyle(
+                                  fontFamily: "poppinsregular", fontSize: 15),
                               textCapitalization: TextCapitalization.none,
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(
@@ -178,10 +191,11 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                             child: TextField(
-                              controller: _emailController,
-                              style:
-                                  const TextStyle(fontFamily: "poppinsregular"),
+                              controller: _emailControllerReg,
+                              style: const TextStyle(
+                                  fontFamily: "poppinsregular", fontSize: 15),
                               textCapitalization: TextCapitalization.none,
+                              keyboardType: TextInputType.emailAddress,
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(
                                   Icons.email_outlined,
@@ -207,10 +221,10 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                             child: TextField(
-                              controller: _phoneController,
+                              controller: _phoneControllerReg,
                               keyboardType: TextInputType.phone,
-                              style:
-                                  const TextStyle(fontFamily: "poppinsregular"),
+                              style: const TextStyle(
+                                  fontFamily: "poppinsregular", fontSize: 15),
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(
                                   Icons.phone_android_outlined,
@@ -229,10 +243,10 @@ class _RegisterState extends State<Register> {
                           Container(
                             padding: const EdgeInsets.all(8.0),
                             child: TextField(
-                              controller: _passwordController,
+                              controller: _passwordControllerReg,
                               obscureText: _isSecurePassword,
-                              style:
-                                  const TextStyle(fontFamily: "poppinsregular"),
+                              style: const TextStyle(
+                                  fontFamily: "poppinsregular", fontSize: 15),
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(
                                   Icons.lock_outline,
@@ -317,7 +331,7 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  Widget _buildTextField({
+  Widget buildTextField({
     required TextEditingController controller,
     required String hintText,
     required IconData icon,
@@ -345,7 +359,7 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  Widget _buildPasswordField({
+  Widget buildPasswordField({
     required TextEditingController controller,
     required String hintText,
     required bool isSecure,

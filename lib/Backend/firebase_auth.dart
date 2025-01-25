@@ -33,7 +33,7 @@ class FirebaseAuthService {
 
       print("User registered: $email");
     } catch (e) {
-      throw Exception("Error during registration: $e");
+      throw Exception("Kesalahan saat registrasi: $e");
     }
   }
 
@@ -50,7 +50,25 @@ class FirebaseAuthService {
 
       print("User logged in: $email");
     } catch (e) {
-      throw Exception("Error during login: $e");
+      throw Exception("Kesalahan saat login: $e");
+    }
+  }
+
+  // Fungsi untuk login menggunakan username
+  Future<String?> getEmailByUsername(String username) async {
+    try {
+      final querySnapshot = await _firestore
+      .collection('users')
+      .where('username', isEqualTo: username)
+      .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs.first.data()['email'] as String?;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception("Terjadi kesalahan saat mengambil email berdasarkan username: $e");
     }
   }
 
@@ -60,7 +78,7 @@ class FirebaseAuthService {
       await _firebaseAuth.signOut();
       print("User logged out");
     } catch (e) {
-      throw Exception("Error during logout: $e");
+      throw Exception("Kesalahan saat logout: $e");
     }
   }
 
