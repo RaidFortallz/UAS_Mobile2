@@ -65,7 +65,7 @@ class _LoginState extends State<Login> {
           context: context,
           dialogType: DialogType.error,
           title: "Gagal",
-          desc: "Gagal login: $e",
+          desc: "Username Belum Terdaftar",
         );
       }
     }

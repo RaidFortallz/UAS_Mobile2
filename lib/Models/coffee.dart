@@ -25,7 +25,8 @@ final listGridCoffee = [
       type: 'Latte',
       rate: 4.8,
       review: 230,
-      description: 'description',
+      description:
+          'Nikmati sensasi rasa kopi yang kaya dan lembut dengan Kopi Latte Premium kami. Dibuat dari biji kopi pilihan yang dipadukan dengan susu segar, kopi latte kami menawarkan keseimbangan sempurna antara rasa espresso yang kuat dan kelezatan creamy dari susu steamed. Setiap cangkir disajikan dengan sentuhan latte art yang memikat, menjadikan momen ngopi Anda lebih istimewa. Cocok untuk dinikmati kapan saja, baik di pagi hari untuk memulai hari Anda, atau di sore hari untuk menyegarkan pikiran.',
       price: 15000),
   Coffee(
       image: 'assets/image/kopi3.png',
@@ -33,7 +34,7 @@ final listGridCoffee = [
       type: 'Latte',
       rate: 4.8,
       review: 230,
-      description: 'description',
+      description: 'Nikmati sensasi rasa kopi yang kaya dan lembut dengan Kopi Latte Premium kami. Dibuat dari biji kopi pilihan yang dipadukan dengan susu segar, kopi latte kami menawarkan keseimbangan sempurna antara rasa espresso yang kuat dan kelezatan creamy dari susu steamed. Setiap cangkir disajikan dengan sentuhan latte art yang memikat, menjadikan momen ngopi Anda lebih istimewa. Cocok untuk dinikmati kapan saja, baik di pagi hari untuk memulai hari Anda, atau di sore hari untuk menyegarkan pikiran.',
       price: 15000),
   Coffee(
       image: 'assets/image/kopi3.png',
@@ -41,7 +42,7 @@ final listGridCoffee = [
       type: 'Latte',
       rate: 4.8,
       review: 230,
-      description: 'description',
+      description: 'Nikmati sensasi rasa kopi yang kaya dan lembut dengan Kopi Latte Premium kami. Dibuat dari biji kopi pilihan yang dipadukan dengan susu segar, kopi latte kami menawarkan keseimbangan sempurna antara rasa espresso yang kuat dan kelezatan creamy dari susu steamed. Setiap cangkir disajikan dengan sentuhan latte art yang memikat, menjadikan momen ngopi Anda lebih istimewa. Cocok untuk dinikmati kapan saja, baik di pagi hari untuk memulai hari Anda, atau di sore hari untuk menyegarkan pikiran.',
       price: 15000),
   Coffee(
       image: 'assets/image/kopi3.png',
@@ -49,6 +50,6 @@ final listGridCoffee = [
       type: 'Latte',
       rate: 4.8,
       review: 230,
-      description: 'description',
+      description: 'Nikmati sensasi rasa kopi yang kaya dan lembut dengan Kopi Latte Premium kami. Dibuat dari biji kopi pilihan yang dipadukan dengan susu segar, kopi latte kami menawarkan keseimbangan sempurna antara rasa espresso yang kuat dan kelezatan creamy dari susu steamed. Setiap cangkir disajikan dengan sentuhan latte art yang memikat, menjadikan momen ngopi Anda lebih istimewa. Cocok untuk dinikmati kapan saja, baik di pagi hari untuk memulai hari Anda, atau di sore hari untuk menyegarkan pikiran.',
       price: 15000),
 ];

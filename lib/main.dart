@@ -4,8 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:uas_mobile2/Backend/firebase_auth.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/dashboard.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/detail_coffee.dart';
-import 'package:uas_mobile2/Frontend/Hal_Dashboard/saldo.dart';
-import 'package:uas_mobile2/Frontend/Hal_Dashboard/settings.dart';
+import 'package:uas_mobile2/Frontend/Hal_Dashboard/keranjang.dart';
+import 'package:uas_mobile2/Frontend/Sidebar/saldo.dart';
+import 'package:uas_mobile2/Frontend/Sidebar/settings.dart';
 import 'package:uas_mobile2/Frontend/Hal_Login&Register/login.dart';
 import 'package:uas_mobile2/Frontend/Hal_Login&Register/register.dart';
 import 'package:uas_mobile2/Frontend/Splashscreen/splashcreen.dart';
@@ -53,6 +54,11 @@ class _MyAppState extends State<MyApp> {
             Coffee coffee =
                 ModalRoute.of(context)!.settings.arguments as Coffee;
             return DetailCoffee(coffee: coffee);
+          },
+          '/keranjang': (context) {
+            Coffee coffee =
+                ModalRoute.of(context)!.settings.arguments as Coffee;
+            return Keranjang(coffee: coffee);
           }
         },
       ),

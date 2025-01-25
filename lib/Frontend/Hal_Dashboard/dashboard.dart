@@ -26,10 +26,10 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
     },
     {
-      'icon': 'assets/image/ic_bag_border.png',
-      'icon_active': 'assets/image/ic_bag_border.png',
+      'icon': 'assets/image/bike.png',
+      'icon_active': 'assets/image/bike.png',
       'fragment': const Center(
-        child: Text('KERANJANG'),
+        child: Text('PENGIRIMAN'),
       ),
     },
     {

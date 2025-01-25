@@ -6,7 +6,7 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:uas_mobile2/Backend/firebase_auth.dart';
-import 'package:uas_mobile2/Frontend/Hal_Dashboard/sidebar.dart';
+import 'package:uas_mobile2/Frontend/Sidebar/sidebar.dart';
 import 'package:uas_mobile2/Models/coffee.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
@@ -126,7 +126,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                   'SELAMAT DATANG',
                   style: TextStyle(
                       fontFamily: "poppinsregular",
-                      fontSize: 14,
+                      fontSize: 16,
                       color: warnaAbu),
                 ),
                 Text(
@@ -134,7 +134,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                   style: const TextStyle(
                       fontFamily: "poppinsregular",
                       fontWeight: FontWeight.w600,
-                      fontSize: 16,
+                      fontSize: 20,
                       color: warnaAbu2),
                 ),
               ],
@@ -197,8 +197,8 @@ class _HomeFragmentState extends State<HomeFragment> {
             ),
             alignment: Alignment.center,
             child: const ImageIcon(
-              AssetImage('assets/image/ic_filter.png'),
-              size: 20,
+              AssetImage('assets/image/ic_bag_border.png'),
+              size: 28,
               color: Colors.white,
             ),
           ),
