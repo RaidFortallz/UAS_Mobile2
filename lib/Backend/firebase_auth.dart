@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:uas_mobile2/Models/coffee.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -57,13 +58,39 @@ class FirebaseAuthService {
     }
   }
 
+// Fungsi untuk Add to Cart
+  Future<void> addToCart(Coffee coffee) async {
+    try {
+      User? user = getCurrentUser();
+      if (user == null) return;
+      await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('cart')
+          .add({
+        'name': coffee.name,
+        'type': coffee.type,
+        'price': coffee.price,
+        'image': coffee.image,
+        'quantity': 1,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      log('${coffee.name} telah ditambahkan ke keranjang',
+          name: "FirebaseAuthService");
+    } catch (e) {
+      log('Gagal menambahkan ke keranjang: $e', name: "FirebaseAuthService");
+      throw Exception("Kesalahan saat menambahkan ke keranjang: $e");
+    }
+  }
+
   // Fungsi untuk login menggunakan username
   Future<String?> getEmailByUsername(String username) async {
     try {
       final querySnapshot = await _firestore
-      .collection('users')
-      .where('username', isEqualTo: username)
-      .get();
+          .collection('users')
+          .where('username', isEqualTo: username)
+          .get();
 
       if (querySnapshot.docs.isNotEmpty) {
         return querySnapshot.docs.first.data()['email'] as String?;
@@ -71,7 +98,8 @@ class FirebaseAuthService {
         return null;
       }
     } catch (e) {
-      throw Exception("Terjadi kesalahan saat mengambil email berdasarkan username: $e");
+      throw Exception(
+          "Terjadi kesalahan saat mengambil email berdasarkan username: $e");
     }
   }
 

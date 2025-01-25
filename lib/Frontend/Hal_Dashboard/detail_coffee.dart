@@ -285,9 +285,7 @@ class _DetailCoffeeState extends State<DetailCoffee> {
                 const Gap(4),
                 Text(
                   NumberFormat.currency(
-                          decimalDigits: 0,
-                           locale: 'id_ID',
-                            symbol: 'Rp')
+                          decimalDigits: 0, locale: 'id_ID', symbol: 'Rp')
                       .format(widget.coffee.price),
                   style: const TextStyle(
                       fontFamily: "poppinsregular",
@@ -302,7 +300,8 @@ class _DetailCoffeeState extends State<DetailCoffee> {
             width: 185,
             child: Bounceable(
               onTap: () {
-                Navigator.pushNamed(context, '/keranjang', arguments: widget.coffee);
+                Navigator.pushNamed(context, '/keranjang',
+                    arguments: widget.coffee);
               },
               child: Container(
                 height: 48,

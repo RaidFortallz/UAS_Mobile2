@@ -372,31 +372,31 @@ class _KeranjangState extends State<Keranjang> {
             });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16),
-            topRight: Radius.circular(16),
-          ),
-        ),
-        child: Container(
-          height: 48,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            color: warnaKopi2,
-          ),
-          child: const Center(
-            child: Text(
-              'Order', style: TextStyle(
-                          fontFamily: "poppinsregular",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
             ),
           ),
-        )
-      ),
+          child: Container(
+            height: 48,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: warnaKopi2,
+            ),
+            child: const Center(
+              child: Text(
+                'Order',
+                style: TextStyle(
+                    fontFamily: "poppinsregular",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white),
+              ),
+            ),
+          )),
     );
   }
 }

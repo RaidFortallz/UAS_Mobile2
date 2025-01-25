@@ -3,6 +3,7 @@ import 'package:uas_mobile2/Backend/firebase_auth.dart';
 import 'package:uas_mobile2/Frontend/Hal_Login&Register/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:uas_mobile2/Frontend/Sidebar/about.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class SidebarPage extends StatefulWidget {
@@ -105,6 +106,19 @@ class _SidebarPageState extends State<SidebarPage> {
             title: 'Settings',
             onTap: () {
               Navigator.pushNamed(context, '/settings');
+            },
+          ),
+          _buildMenuItem(
+            context,
+            icon: Icons.info,
+            title: 'About',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AboutPage(),
+                ),
+              );
             },
           ),
           const Divider(),

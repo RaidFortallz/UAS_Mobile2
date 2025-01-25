@@ -104,7 +104,7 @@ class _LoginState extends State<Login> {
                     Positioned(
                       width: 300,
                       height: 300,
-                      left: 10,
+                      left: 47,
                       child: Container(
                         decoration: const BoxDecoration(
                           image: DecorationImage(

@@ -57,8 +57,8 @@ class _HomeFragmentState extends State<HomeFragment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // Assign the GlobalKey to Scaffold
-      drawer: const SidebarPage(), // Set the Sidebar as the Drawer
+      key: _scaffoldKey,
+      drawer: const SidebarPage(),
       body: ListView(
         padding: const EdgeInsets.all(0),
         children: [
@@ -116,7 +116,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             IconButton(
               icon: const Icon(Icons.menu, color: warnaAbu),
               onPressed: () {
-                _scaffoldKey.currentState?.openDrawer(); // Open the drawer
+                _scaffoldKey.currentState?.openDrawer();
               },
             ),
             Column(
