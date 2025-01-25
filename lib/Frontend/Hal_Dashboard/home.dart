@@ -398,7 +398,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                   style: const TextStyle(
                     fontFamily: "poppinsregular",
                     fontWeight: FontWeight.w600,
-                    fontSize: 16,
+                    fontSize: 13,
                     color: warnaKopi2,
                   ),
                 ),
@@ -422,7 +422,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                       style: const TextStyle(
                         fontFamily: "poppinsregular",
                         fontWeight: FontWeight.w600,
-                        fontSize: 16,
+                        fontSize: 15,
                         color: warnaKopi2,
                       ),
                     ),
