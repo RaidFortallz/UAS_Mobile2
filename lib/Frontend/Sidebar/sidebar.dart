@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:uas_mobile2/Backend/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 import 'package:uas_mobile2/Frontend/Hal_Login&Register/login.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uas_mobile2/Frontend/Sidebar/about.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
@@ -14,11 +13,8 @@ class SidebarPage extends StatefulWidget {
 }
 
 class _SidebarPageState extends State<SidebarPage> {
-  String username = 'Pengguna';
-  String email = 'email@contoh.com';
-
-  final FirebaseAuthService authService = FirebaseAuthService();
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  String username = '';
+  String email = '';
 
   @override
   void initState() {
@@ -27,21 +23,18 @@ class _SidebarPageState extends State<SidebarPage> {
   }
 
   Future<void> _getUserInfo() async {
-    User? user = authService.getCurrentUser();
+    final authService = Provider.of<SupabaseAuthService>(context, listen: false);
+    final user = authService.getCurrentUser();
+
     if (user != null) {
-      try {
-        DocumentSnapshot userDoc =
-            await firestore.collection('users').doc(user.uid).get();
-        setState(() {
-          username = userDoc['username'] ?? 'Pengguna';
-          email = userDoc['email'] ?? 'email@contoh.com';
-        });
-      } catch (e) {
-        if (e is FirebaseException) {
-        } else {
-          // Handle any other errors
-        }
-      }
+      final userId = user.id;
+      final usernameFromDb = await authService.getUsernameByUserId(userId);
+      final emailFromDb = await authService.getEmailByUsername(usernameFromDb ?? '');
+
+      setState(() {
+        username = usernameFromDb ?? '';
+        email = emailFromDb ?? '';
+      });
     }
   }
 
@@ -128,6 +121,7 @@ class _SidebarPageState extends State<SidebarPage> {
             title: 'Logout',
             onTap: () async {
               try {
+                final authService = Provider.of<SupabaseAuthService>(context, listen: false);
                 await authService.logout();
                 if (context.mounted) {
                   Navigator.pushReplacement(

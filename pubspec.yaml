@@ -32,6 +32,8 @@ dependencies:
     sdk: flutter
   lottie: ^3.2.0
   cupertino_icons: ^1.0.8
+  supabase: ^2.6.2
+  supabase_flutter: ^2.8.3
   flutter_bounceable: ^1.1.0
   gap: ^3.0.1
   intl: ^0.20.1

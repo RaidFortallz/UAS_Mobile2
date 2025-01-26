@@ -1,7 +1,8 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
-import 'package:uas_mobile2/Backend/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 import 'package:uas_mobile2/Frontend/PopUp_Dialog/awesome_dialog.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
@@ -13,12 +14,12 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final FirebaseAuthService _authService = FirebaseAuthService();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isSecurePassword = true;
 
   void _loginUser() async {
+    final authService = Provider.of<SupabaseAuthService>(context, listen: false);
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
 
@@ -33,7 +34,7 @@ class _LoginState extends State<Login> {
     }
 
     try {
-      final email = await _authService.getEmailByUsername(username);
+      final email = await authService.getEmailByUsername(username);
 
       if (email == null) {
         if (mounted) {
@@ -47,7 +48,7 @@ class _LoginState extends State<Login> {
         return;
       }
 
-      await _authService.loginWithEmail(email: email, password: password);
+      await authService.loginWithEmail(email: email, password: password);
 
       if (mounted) {
         CustomDialog.showDialog(
@@ -104,7 +105,7 @@ class _LoginState extends State<Login> {
                     Positioned(
                       width: 300,
                       height: 300,
-                      left: 47,
+                      left: 4,
                       child: Container(
                         decoration: const BoxDecoration(
                           image: DecorationImage(

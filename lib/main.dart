@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:uas_mobile2/Backend/firebase_auth.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uas_mobile2/Backend/Provider/firebase_auth.dart';
+import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/dashboard.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/detail_coffee.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/keranjang.dart';
@@ -22,7 +24,18 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+
+  await Supabase.initialize(
+    url: 'https://ppniihvttatatvdmzbeo.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwbmlpaHZ0dGF0YXR2ZG16YmVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc4ODI4NDAsImV4cCI6MjA1MzQ1ODg0MH0.rtJpnEVuqSN1jcbOgJPXZ3OsGwEngTzaZCk8NGYHj4Y',
+  );
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => SupabaseAuthService()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatefulWidget {

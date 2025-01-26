@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:uas_mobile2/Backend/firebase_auth.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class SaldoPage extends StatefulWidget {
@@ -12,37 +9,9 @@ class SaldoPage extends StatefulWidget {
 }
 
 class _SaldoPageState extends State<SaldoPage> {
-  final FirebaseAuthService authService = FirebaseAuthService();
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  
   double saldo = 0.0;
 
-  @override
-  void initState() {
-    super.initState();
-    _getSaldo();
-  }
-
-  // Mengambil saldo pengguna dari Firestore
-  Future<void> _getSaldo() async {
-    User? user = authService.getCurrentUser();
-    if (user != null) {
-      try {
-        DocumentSnapshot userDoc =
-            await firestore.collection('users').doc(user.uid).get();
-        if (mounted) {
-          setState(() {
-            saldo = userDoc['saldo'] ?? 0.0;
-          });
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Gagal mengambil saldo: $e')),
-          );
-        }
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

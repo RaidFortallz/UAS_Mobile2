@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
-import 'package:uas_mobile2/Backend/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 import 'package:uas_mobile2/Frontend/Sidebar/sidebar.dart';
 import 'package:uas_mobile2/Models/coffee.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
@@ -22,11 +21,7 @@ class _HomeFragmentState extends State<HomeFragment> {
   int _currentIndex = 0;
   String categorySelected = 'All Coffee';
   String username = '';
-
-  // Instansiasi FirebaseAuthService dan FirebaseFirestore
-  final FirebaseAuthService _authService = FirebaseAuthService();
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  
   final List<String> banners = [
     'assets/image/banner_kopi1.png',
     'assets/image/banner_kopi2.png',
@@ -42,14 +37,15 @@ class _HomeFragmentState extends State<HomeFragment> {
   }
 
   Future<void> _getUserInfo() async {
-    User? user = _authService.getCurrentUser();
+    final authService = Provider.of<SupabaseAuthService>(context, listen: false);
+    final user = authService.getCurrentUser();
 
     if (user != null) {
-      DocumentSnapshot userDoc =
-          await _firestore.collection('users').doc(user.uid).get();
+      final userId = user.id;
+      final usernameFromDb = await authService.getUsernameByUserId(userId);
 
       setState(() {
-        username = userDoc['username'] ?? 'Pengguna';
+        username = usernameFromDb ?? 'Pengguna';
       });
     }
   }
@@ -130,7 +126,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                       color: warnaAbu),
                 ),
                 Text(
-                  username.isEmpty ? 'USER' : username,
+                  username.isEmpty ? '' : username,
                   style: const TextStyle(
                       fontFamily: "poppinsregular",
                       fontWeight: FontWeight.w600,

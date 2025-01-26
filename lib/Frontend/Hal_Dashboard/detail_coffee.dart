@@ -309,15 +309,25 @@ class _DetailCoffeeState extends State<DetailCoffee> {
                   borderRadius: BorderRadius.circular(16),
                   color: warnaKopi2,
                 ),
-                child: const Center(
-                  child: Text(
-                    'Pesan',
-                    style: TextStyle(
-                        fontFamily: "poppinsregular",
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white),
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/image/ic_bag_border.png',
+                      height: 24,
+                      width: 24,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(width: 8,),
+                    const Text(
+                      'Pesan',
+                      style: TextStyle(
+                          fontFamily: "poppinsregular",
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
+                    ),
+                  ],
                 ),
               ),
             ),

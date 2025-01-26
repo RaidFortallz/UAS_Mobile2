@@ -1,7 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
-import 'package:uas_mobile2/Backend/firebase_auth.dart';
+import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 import 'package:uas_mobile2/Frontend/PopUp_Dialog/awesome_dialog.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
@@ -13,7 +13,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  final FirebaseAuthService _authService = FirebaseAuthService();
+  final SupabaseAuthService _authService = SupabaseAuthService();
   final TextEditingController _usernameControllerReg = TextEditingController();
   final TextEditingController _emailControllerReg = TextEditingController();
   final TextEditingController _phoneControllerReg = TextEditingController();
@@ -40,12 +40,13 @@ class _RegisterState extends State<Register> {
     }
 
     try {
-      await _authService.registerUser(
+       await _authService.registerUser(
         username: username,
         email: email,
         password: password,
         phoneNumber: phoneNumber,
       );
+
       if (mounted) {
         CustomDialog.showDialog(
             context: context,
@@ -102,7 +103,7 @@ class _RegisterState extends State<Register> {
                     Positioned(
                       width: 210,
                       height: 210,
-                      left: 90,
+                      left: 70,
                       top: 20,
                       child: Container(
                         decoration: const BoxDecoration(
