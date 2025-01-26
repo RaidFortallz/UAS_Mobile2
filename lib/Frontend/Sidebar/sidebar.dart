@@ -23,13 +23,15 @@ class _SidebarPageState extends State<SidebarPage> {
   }
 
   Future<void> _getUserInfo() async {
-    final authService = Provider.of<SupabaseAuthService>(context, listen: false);
+    final authService =
+        Provider.of<SupabaseAuthService>(context, listen: false);
     final user = authService.getCurrentUser();
 
     if (user != null) {
       final userId = user.id;
       final usernameFromDb = await authService.getUsernameByUserId(userId);
-      final emailFromDb = await authService.getEmailByUsername(usernameFromDb ?? '');
+      final emailFromDb =
+          await authService.getEmailByUsername(usernameFromDb ?? '');
 
       setState(() {
         username = usernameFromDb ?? '';
@@ -87,6 +89,14 @@ class _SidebarPageState extends State<SidebarPage> {
           // Item Menu
           _buildMenuItem(
             context,
+            icon: Icons.person,
+            title: 'Profile',
+            onTap: () {
+              Navigator.pushNamed(context, '/profil');
+            },
+          ),
+          _buildMenuItem(
+            context,
             icon: Icons.account_balance_wallet,
             title: 'Saldo',
             onTap: () {
@@ -121,7 +131,8 @@ class _SidebarPageState extends State<SidebarPage> {
             title: 'Logout',
             onTap: () async {
               try {
-                final authService = Provider.of<SupabaseAuthService>(context, listen: false);
+                final authService =
+                    Provider.of<SupabaseAuthService>(context, listen: false);
                 await authService.logout();
                 if (context.mounted) {
                   Navigator.pushReplacement(
