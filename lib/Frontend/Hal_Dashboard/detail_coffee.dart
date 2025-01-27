@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:uas_mobile2/Backend/Provider/cart_provider.dart';
+import 'package:uas_mobile2/Backend/Provider/favorite_provider.dart';
 import 'package:uas_mobile2/Frontend/PopUp_Dialog/awesome_dialog.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
@@ -65,33 +66,48 @@ class _DetailCoffeeState extends State<DetailCoffee> {
     );
   }
 
-  Widget buildHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const ImageIcon(
-            AssetImage('assets/image/ic_arrow_left.png'),
-          ),
-        ),
-        const Text(
-          'Detail',
-          style: TextStyle(
-              fontFamily: "poppinsregular",
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-              color: warnaKopi2),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: const ImageIcon(
-            AssetImage('assets/image/ic_heart_border.png'),
-          ),
-        ),
-      ],
-    );
-  }
+Widget buildHeader() {
+  final favoriteProvider = Provider.of<FavoriteProvider>(context);
+
+  bool isFavorite = favoriteProvider.isFavorite(widget.coffee);
+
+  return Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    IconButton(
+      onPressed: () => Navigator.pop(context),
+      icon: const ImageIcon(
+        AssetImage('assets/image/ic_arrow_left.png'),
+      ),
+    ),
+    const Text(
+      'Detail',
+      style: TextStyle(
+          fontFamily: "poppinsregular",
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+          color: warnaKopi2),
+    ),
+    IconButton(
+      onPressed: () {
+        setState(() {
+          if (isFavorite) {
+            favoriteProvider.removeFavorite(widget.coffee);
+          } else {
+            favoriteProvider.addFavorite(widget.coffee);
+          }
+        });
+      },
+      icon: ImageIcon(
+        const AssetImage('assets/image/ic_heart_border.png'), // Tetap menggunakan ikon yang sama
+        color: isFavorite ? Colors.red : warnaKopi2, // Merah jika difavoritkan, warna asal jika tidak
+      ),
+    ),
+  ],
+);
+}
+
+
 
   Widget buildImage() {
     return ClipRRect(

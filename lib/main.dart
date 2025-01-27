@@ -15,6 +15,7 @@ import 'package:uas_mobile2/Frontend/Hal_Login&Register/register.dart';
 import 'package:uas_mobile2/Frontend/Splashscreen/splashcreen.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
+import 'package:uas_mobile2/Backend/Provider/favorite_provider.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -32,6 +33,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => SupabaseAuthService()),
       ChangeNotifierProvider(create: (_) => CoffeeService()),
       ChangeNotifierProvider(create: (_) => CartProvider()),
+      ChangeNotifierProvider(create: (_) => FavoriteProvider()),
 
     ],
     child: const MyApp(),
