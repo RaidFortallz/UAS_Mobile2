@@ -3,57 +3,72 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:uas_mobile2/Backend/Provider/cart_provider.dart';
 import 'package:uas_mobile2/Frontend/PopUp_Dialog/awesome_dialog.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class Keranjang extends StatefulWidget {
-  const Keranjang({super.key, required this.coffee, required this.price, required this.size});
-  final Coffees coffee;
-  final String size;
-  final int price;
+  const Keranjang({super.key});
 
   @override
   State<Keranjang> createState() => _KeranjangState();
 }
 
 class _KeranjangState extends State<Keranjang> {
-  int _quantity = 1;
   final int shippingCost = 5000;
-
-  void _incrementQuantity() {
-    setState(() {
-      _quantity++;
-    });
-  }
-
-  void _decrementQuantity() {
-    if (_quantity > 1) {
-      setState(() {
-        _quantity--;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        children: [
-          const Gap(48),
-          buildHeader(),
-          const Gap(24),
-          buildAddress(),
-          const Gap(20),
-          buildPurchasedCoffee(),
-          const Gap(24),
-          buildPayment(),
-          const Gap(24)
-        ],
+      body: Consumer<CartProvider>(
+        builder: (context, cartProvider, child) {
+          final cartItems = cartProvider.cartItems;
+
+          // Jika ada item dalam keranjang
+          return ListView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            children: [
+              const Gap(48),
+              buildHeader(),
+              const Gap(24),
+              if (cartItems.isEmpty)
+              const Gap(270),
+                const Expanded(
+                  child: Center(
+                    child: Text(
+                      'Keranjang mu kosong',
+                      style: TextStyle(
+                        fontFamily: "poppinsregular",
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: warnaKopi3,
+                      ),
+                    ),
+                  ),
+                ),
+              if (cartItems.isNotEmpty) ...[
+                buildAddress(),
+                const Gap(20),
+                buildPurchasedCoffee(cartItems),
+                const Gap(24),
+                buildPayment(cartProvider),
+                const Gap(24),
+              ],
+            ],
+          );
+        },
       ),
-      bottomNavigationBar: buildOrder(),
+      bottomNavigationBar: Consumer<CartProvider>(
+        builder: (context, cartProvider, child) {
+          if (cartProvider.cartItems.isEmpty) {
+            return const SizedBox.shrink();
+          }
+          return buildOrder();
+        },
+      ), // Tombol order di bawah halaman
     );
   }
 
@@ -165,77 +180,34 @@ class _KeranjangState extends State<Keranjang> {
     );
   }
 
-  Widget buildPurchasedCoffee() {
+  Widget buildPurchasedCoffee(List<Map<String, dynamic>> cartItems) {
     return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+      children: cartItems.map((item) {
+        final coffee = item['coffee'] as Coffees;
+        final size = item['size'] as String;
+        int quantity = item['quantity'] != null ? item['quantity'] as int : 1;
+
+        return Column(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                widget.coffee.image,
-                width: 55,
-                height: 55,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const Gap(16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.coffee.name,
-                    style: const TextStyle(
-                        fontFamily: "poppinsregular",
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: warnaKopi),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    coffee.image,
+                    width: 55,
+                    height: 55,
+                    fit: BoxFit.cover,
                   ),
-                  Text(
-                    '${widget.coffee.category} , ${widget.size}',
-                    style: const TextStyle(
-                        fontFamily: "poppinsregular",
-                        fontSize: 12,
-                        color: warnaAbu),
-                  ),
-                ],
-              ),
-            ),
-            const Gap(16),
-            Bounceable(
-              onTap: null,
-              child: Row(
-                children: [
-                  // Button Decrement
-                  GestureDetector(
-                    onTap: _quantity > 1 ? _decrementQuantity : null,
-                    child: Container(
-                      width: 24,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: _quantity > 1 ? warnaKopi : warnaAbu,
-                        ),
-                        color: _quantity > 1
-                            ? Colors.white
-                            : warnaAbu.withOpacity(0.35),
-                      ),
-                      child: Icon(
-                        Icons.remove,
-                        size: 15,
-                        color: _quantity > 1 ? warnaKopi : warnaAbu,
-                      ),
-                    ),
-                  ),
-                  const Gap(16),
-                  SizedBox(
-                    width: 28,
-                    child: Center(
-                      child: Text(
-                        '$_quantity',
+                ),
+                const Gap(16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        coffee.name,
                         style: const TextStyle(
                           fontFamily: "poppinsregular",
                           fontSize: 14,
@@ -243,46 +215,123 @@ class _KeranjangState extends State<Keranjang> {
                           color: warnaKopi,
                         ),
                       ),
-                    ),
-                  ),
-                  const Gap(16),
-                  // Button Increment
-                  GestureDetector(
-                    onTap: _incrementQuantity,
-                    child: Container(
-                      width: 24,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: warnaKopi,
+                      Text(
+                        '${coffee.category} , $size',
+                        style: const TextStyle(
+                          fontFamily: "poppinsregular",
+                          fontSize: 12,
+                          color: warnaAbu,
                         ),
                       ),
-                      child: const Icon(
-                        Icons.add,
-                        color: warnaKopi,
-                        size: 15,
-                      ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                const Gap(16),
+                Bounceable(
+                  onTap: null,
+                  child: Row(
+                    children: [
+                      // Button Decrement
+                      GestureDetector(
+                        onTap: () {
+                          if (quantity > 1) {
+                            setState(() {
+                              Provider.of<CartProvider>(context, listen: false)
+                                  .updateQuantity(coffee, size, quantity - 1);
+                            });
+                          }
+                        },
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: quantity > 1 ? warnaKopi : warnaAbu,
+                            ),
+                            color: quantity > 1
+                                ? Colors.white
+                                : warnaAbu.withOpacity(0.35),
+                          ),
+                          child: Icon(
+                            Icons.remove,
+                            size: 15,
+                            color: quantity > 1 ? warnaKopi : warnaAbu,
+                          ),
+                        ),
+                      ),
+                      const Gap(16),
+                      SizedBox(
+                        width: 28,
+                        child: Center(
+                          child: Text(
+                            '$quantity',
+                            style: const TextStyle(
+                              fontFamily: "poppinsregular",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: warnaKopi,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Gap(16),
+                      // Button Increment
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            Provider.of<CartProvider>(context, listen: false)
+                                .updateQuantity(coffee, size, quantity + 1);
+                          });
+                        },
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: warnaKopi,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.add,
+                            color: warnaKopi,
+                            size: 15,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const Gap(26),
+            const Divider(
+              color: warnaKopi3,
+              height: 1,
+              thickness: 4,
             ),
           ],
-        ),
-        const Gap(26),
-        const Divider(
-          color: warnaKopi3,
-          height: 1,
-          thickness: 4,
-        ),
-      ],
+        );
+      }).toList(),
     );
   }
 
-  Widget buildPayment() {
-    final int coffeePrice = widget.price * _quantity;
-    final int totalPrice = coffeePrice + shippingCost;
+  Widget buildPayment(CartProvider cartProvider) {
+    final cartItems = cartProvider.cartItems;
+    int totalPrice = 0;
+
+    // Menghitung total harga berdasarkan item dalam keranjang
+    for (var item in cartItems) {
+      final price = item['price'] as int;
+      final quantity = (item['quantity'] ?? 1) as int;
+      totalPrice += price * quantity;
+    }
+
+    // Tambahkan biaya pengiriman
+    final int totalWithShipping = totalPrice + shippingCost;
+
+    // Format harga dalam format Rupiah
     final NumberFormat currencyFormat =
         NumberFormat.currency(decimalDigits: 0, locale: 'id_ID', symbol: 'Rp');
 
@@ -307,7 +356,7 @@ class _KeranjangState extends State<Keranjang> {
                   fontFamily: "poppinsregular", fontSize: 14, color: warnaKopi),
             ),
             Text(
-              currencyFormat.format(coffeePrice),
+              currencyFormat.format(totalPrice),
               style: const TextStyle(
                   fontFamily: "poppinsregular", fontSize: 14, color: warnaKopi),
             ),
@@ -326,7 +375,7 @@ class _KeranjangState extends State<Keranjang> {
               currencyFormat.format(shippingCost),
               style: const TextStyle(
                   fontFamily: "poppinsregular", fontSize: 14, color: warnaKopi),
-            )
+            ),
           ],
         ),
         const Gap(13),
@@ -348,15 +397,15 @@ class _KeranjangState extends State<Keranjang> {
                   color: warnaKopi3),
             ),
             Text(
-              currencyFormat.format(totalPrice),
+              currencyFormat.format(totalWithShipping),
               style: const TextStyle(
                   fontFamily: "poppinsregular",
                   fontSize: 17,
                   fontWeight: FontWeight.w600,
                   color: warnaKopi3),
-            )
+            ),
           ],
-        )
+        ),
       ],
     );
   }
@@ -364,9 +413,13 @@ class _KeranjangState extends State<Keranjang> {
   Widget buildOrder() {
     return Bounceable(
       onTap: () {
+        final cartProvider = Provider.of<CartProvider>(context, listen: false);
+        cartProvider.clearCart();
+
         CustomDialog.showDialog(
             context: context,
             dialogType: DialogType.success,
+            animType: AnimType.bottomSlide,
             title: "Sukses",
             desc: "Berhasil Pesan Coffee",
             btnOkOnPress: () {

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uas_mobile2/Backend/Provider/cart_provider.dart';
 import 'package:uas_mobile2/Backend/Provider/coffee_service.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/dashboard.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/detail_coffee.dart';
-import 'package:uas_mobile2/Frontend/Hal_Dashboard/keranjang.dart';
 import 'package:uas_mobile2/Frontend/Sidebar/profil.dart';
 import 'package:uas_mobile2/Frontend/Sidebar/saldo.dart';
 import 'package:uas_mobile2/Frontend/Sidebar/settings.dart';
@@ -31,6 +31,7 @@ void main() async {
     providers: [
       ChangeNotifierProvider(create: (_) => SupabaseAuthService()),
       ChangeNotifierProvider(create: (_) => CoffeeService()),
+      ChangeNotifierProvider(create: (_) => CartProvider()),
 
     ],
     child: const MyApp(),
@@ -66,13 +67,6 @@ class _MyAppState extends State<MyApp> {
               ModalRoute.of(context)!.settings.arguments as Coffees;
           return DetailCoffee(coffee: coffee);
         },
-        '/keranjang': (context) {
-          final arguments = ModalRoute.of(context)!.settings.arguments as Map<String,dynamic>;
-          Coffees coffee = arguments['coffee'];
-          String size = arguments['size'];
-          int price = arguments['price'];
-          return Keranjang(coffee: coffee, price: price, size: size);
-        }
       },
     );
   }

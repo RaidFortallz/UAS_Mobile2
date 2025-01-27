@@ -8,13 +8,14 @@ class CustomDialog {
     required DialogType dialogType,
     required String title,
     required String desc,
+    AnimType? animType,
     VoidCallback? btnOkOnPress,
   }) {
 
     AwesomeDialog(
       context: context,
       dialogType: dialogType,
-      animType: AnimType.scale,
+      animType: animType ?? AnimType.scale,
       title: title,
       desc: desc,
       btnOkOnPress: btnOkOnPress != null

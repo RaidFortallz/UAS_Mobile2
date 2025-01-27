@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_mobile2/Backend/Provider/coffee_service.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
+import 'package:uas_mobile2/Frontend/Hal_Dashboard/keranjang.dart';
 import 'package:uas_mobile2/Frontend/Sidebar/sidebar.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
@@ -22,7 +23,7 @@ class _HomeFragmentState extends State<HomeFragment> {
   int _currentIndex = 0;
   String categorySelected = 'All Coffee';
   String username = '';
-  
+
   final List<String> banners = [
     'assets/image/banner_kopi1.png',
     'assets/image/banner_kopi2.png',
@@ -34,8 +35,8 @@ class _HomeFragmentState extends State<HomeFragment> {
   @override
   void initState() {
     super.initState();
-    _getUserInfo(); 
-    
+    _getUserInfo();
+
     Future.microtask(() {
       final coffeeService = Provider.of<CoffeeService>(context, listen: false);
       coffeeService.fetchCoffees();
@@ -43,7 +44,8 @@ class _HomeFragmentState extends State<HomeFragment> {
   }
 
   Future<void> _getUserInfo() async {
-    final authService = Provider.of<SupabaseAuthService>(context, listen: false);
+    final authService =
+        Provider.of<SupabaseAuthService>(context, listen: false);
     final user = authService.getCurrentUser();
 
     if (user != null) {
@@ -56,10 +58,8 @@ class _HomeFragmentState extends State<HomeFragment> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     final coffeeService = Provider.of<CoffeeService>(context);
     final coffees = coffeeService.coffees;
     final isLoading = coffeeService.isLoading;
@@ -194,8 +194,11 @@ class _HomeFragmentState extends State<HomeFragment> {
           ),
         ),
         const Gap(16),
-        InkWell(
-          onTap: () {},
+        Bounceable(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const Keranjang()));
+          },
           child: Container(
             height: 52,
             width: 52,
@@ -320,14 +323,15 @@ class _HomeFragmentState extends State<HomeFragment> {
   }
 
   Widget buildGridCoffee(List<Coffees> coffees, bool isLoading) {
-
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator(),);
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
     }
 
     if (coffees.isEmpty) {
-    return const Center(child: Text('Kopi tidak tersedia'));
-  }
+      return const Center(child: Text('Kopi tidak tersedia'));
+    }
 
     return Expanded(
       child: GridView.builder(
@@ -342,7 +346,7 @@ class _HomeFragmentState extends State<HomeFragment> {
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           final coffee = coffees[index];
-      
+
           return GestureDetector(
             onTap: () {
               Navigator.pushNamed(context, '/detail', arguments: coffee);

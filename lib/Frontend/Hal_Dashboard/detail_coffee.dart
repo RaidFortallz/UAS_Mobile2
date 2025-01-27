@@ -1,8 +1,12 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
+import 'package:uas_mobile2/Backend/Provider/cart_provider.dart';
+import 'package:uas_mobile2/Frontend/PopUp_Dialog/awesome_dialog.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
@@ -16,7 +20,7 @@ class DetailCoffee extends StatefulWidget {
 
 class _DetailCoffeeState extends State<DetailCoffee> {
   String sizeSelected = 'S';
- int price = 0;
+  int price = 0;
 
   @override
   void initState() {
@@ -319,12 +323,18 @@ class _DetailCoffeeState extends State<DetailCoffee> {
             width: 185,
             child: Bounceable(
               onTap: () {
-                Navigator.pushNamed(context, '/keranjang',
-                    arguments: {
-                      'coffee': widget.coffee,
-                      'size': sizeSelected,
-                      'price': price,
-                    });
+                final cartProvider =
+                    Provider.of<CartProvider>(context, listen: false);
+                cartProvider.addToCart(widget.coffee, sizeSelected, price);
+
+                CustomDialog.showDialog(
+                    context: context,
+                    dialogType: DialogType.success,
+                    animType: AnimType.bottomSlide,
+                    title: "Sukses",
+                    desc: "Pesanan dimasukkan ke keranjang",
+                    btnOkOnPress: () {},
+                    );
               },
               child: Container(
                 height: 48,
@@ -341,7 +351,9 @@ class _DetailCoffeeState extends State<DetailCoffee> {
                       width: 24,
                       color: Colors.white,
                     ),
-                    const SizedBox(width: 8,),
+                    const SizedBox(
+                      width: 8,
+                    ),
                     const Text(
                       'Pesan',
                       style: TextStyle(
