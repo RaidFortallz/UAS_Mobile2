@@ -4,9 +4,10 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:uas_mobile2/Backend/Provider/coffee_service.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 import 'package:uas_mobile2/Frontend/Sidebar/sidebar.dart';
-import 'package:uas_mobile2/Models/coffee.dart';
+import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class HomeFragment extends StatefulWidget {
@@ -33,7 +34,12 @@ class _HomeFragmentState extends State<HomeFragment> {
   @override
   void initState() {
     super.initState();
-    _getUserInfo();
+    _getUserInfo(); 
+    
+    Future.microtask(() {
+      final coffeeService = Provider.of<CoffeeService>(context, listen: false);
+      coffeeService.fetchCoffees();
+    });
   }
 
   Future<void> _getUserInfo() async {
@@ -50,8 +56,14 @@ class _HomeFragmentState extends State<HomeFragment> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
+
+    final coffeeService = Provider.of<CoffeeService>(context);
+    final coffees = coffeeService.coffees;
+    final isLoading = coffeeService.isLoading;
+
     return Scaffold(
       key: _scaffoldKey,
       drawer: const SidebarPage(),
@@ -82,7 +94,7 @@ class _HomeFragmentState extends State<HomeFragment> {
           const Gap(20),
           buildCategories(),
           const Gap(16),
-          buildGridCoffee(),
+          buildGridCoffee(coffees, isLoading),
           const Gap(30)
         ],
       ),
@@ -307,144 +319,155 @@ class _HomeFragmentState extends State<HomeFragment> {
     );
   }
 
-  Widget buildGridCoffee() {
-    return GridView.builder(
-      itemCount: listGridCoffee.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisExtent: 238,
-          crossAxisSpacing: 15,
-          mainAxisSpacing: 24),
-      shrinkWrap: true,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        Coffee coffee = listGridCoffee[index];
+  Widget buildGridCoffee(List<Coffees> coffees, bool isLoading) {
 
-        return GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, '/detail', arguments: coffee);
-          },
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(8, 8, 8, 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        coffee.image,
-                        height: 128,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator(),);
+    }
+
+    if (coffees.isEmpty) {
+    return const Center(child: Text('Kopi tidak tersedia'));
+  }
+
+    return Expanded(
+      child: GridView.builder(
+        itemCount: coffees.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisExtent: 238,
+            crossAxisSpacing: 15,
+            mainAxisSpacing: 24),
+        shrinkWrap: true,
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          final coffee = coffees[index];
+      
+          return GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/detail', arguments: coffee);
+            },
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          coffee.image,
+                          height: 128,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [
-                              warnaHitam2.withOpacity(0.3),
-                              warnaHitam.withOpacity(0.3),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors: [
+                                warnaHitam2.withOpacity(0.3),
+                                warnaHitam.withOpacity(0.3),
+                              ],
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topRight: Radius.circular(12),
+                              bottomLeft: Radius.circular(24),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Image.asset(
+                                'assets/image/ic_star.png',
+                                height: 12,
+                                width: 12,
+                              ),
+                              const Gap(4),
+                              Text(
+                                coffee.rate.toString(),
+                                style: const TextStyle(
+                                    fontFamily: "poppinsregular",
+                                    fontSize: 8,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white),
+                              )
                             ],
                           ),
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(12),
-                            bottomLeft: Radius.circular(24),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Gap(8),
+                  Text(
+                    coffee.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontFamily: "poppinsregular",
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                      color: warnaKopi2,
+                    ),
+                  ),
+                  const Gap(4),
+                  Text(
+                    coffee.category,
+                    style: const TextStyle(
+                      fontFamily: "poppinsregular",
+                      fontSize: 12,
+                      color: warnaAbu,
+                    ),
+                  ),
+                  const Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        NumberFormat.currency(
+                                decimalDigits: 0, locale: 'id_ID', symbol: 'Rp')
+                            .format(coffee.price),
+                        style: const TextStyle(
+                          fontFamily: "poppinsregular",
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                          color: warnaKopi2,
+                        ),
+                      ),
+                      Bounceable(
+                        onTap: () {},
+                        child: Container(
+                          height: 32,
+                          width: 32,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: warnaKopi3,
+                          ),
+                          child: const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: 18,
                           ),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Image.asset(
-                              'assets/image/ic_star.png',
-                              height: 12,
-                              width: 12,
-                            ),
-                            const Gap(4),
-                            Text(
-                              '${coffee.rate}',
-                              style: const TextStyle(
-                                  fontFamily: "poppinsregular",
-                                  fontSize: 8,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const Gap(8),
-                Text(
-                  coffee.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontFamily: "poppinsregular",
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                    color: warnaKopi2,
-                  ),
-                ),
-                const Gap(4),
-                Text(
-                  coffee.type,
-                  style: const TextStyle(
-                    fontFamily: "poppinsregular",
-                    fontSize: 12,
-                    color: warnaAbu,
-                  ),
-                ),
-                const Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      NumberFormat.currency(
-                              decimalDigits: 0, locale: 'id_ID', symbol: 'Rp')
-                          .format(coffee.price),
-                      style: const TextStyle(
-                        fontFamily: "poppinsregular",
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                        color: warnaKopi2,
-                      ),
-                    ),
-                    Bounceable(
-                      onTap: () {},
-                      child: Container(
-                        height: 32,
-                        width: 32,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: warnaKopi3,
-                        ),
-                        child: const Icon(
-                          Icons.add,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                      ),
-                    )
-                  ],
-                )
-              ],
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

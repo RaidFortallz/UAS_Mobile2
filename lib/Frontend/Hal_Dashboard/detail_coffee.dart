@@ -3,12 +3,12 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
-import 'package:uas_mobile2/Models/coffee.dart';
+import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class DetailCoffee extends StatefulWidget {
   const DetailCoffee({super.key, required this.coffee});
-  final Coffee coffee;
+  final Coffees coffee;
 
   @override
   State<DetailCoffee> createState() => _DetailCoffeeState();
@@ -16,6 +16,26 @@ class DetailCoffee extends StatefulWidget {
 
 class _DetailCoffeeState extends State<DetailCoffee> {
   String sizeSelected = 'S';
+ int price = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    price = widget.coffee.price;
+  }
+
+  void updatePrice(String size) {
+    int additionalPrice = 0;
+    if (size == 'M') {
+      additionalPrice = 3000;
+    } else if (size == 'L') {
+      additionalPrice = 5000;
+    }
+    setState(() {
+      sizeSelected = size;
+      price = widget.coffee.price + additionalPrice;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +92,7 @@ class _DetailCoffeeState extends State<DetailCoffee> {
   Widget buildImage() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
-      child: Image.asset(
+      child: Image.network(
         widget.coffee.image,
         width: double.infinity,
         height: 202,
@@ -103,7 +123,7 @@ class _DetailCoffeeState extends State<DetailCoffee> {
                 children: [
                   const Gap(4),
                   Text(
-                    widget.coffee.type,
+                    widget.coffee.category,
                     style: const TextStyle(
                         fontFamily: "poppinsregular",
                         fontSize: 12,
@@ -232,8 +252,7 @@ class _DetailCoffeeState extends State<DetailCoffee> {
             return Expanded(
               child: Bounceable(
                 onTap: () {
-                  sizeSelected = e;
-                  setState(() {});
+                  updatePrice(e);
                 },
                 child: Container(
                   height: 41,
@@ -286,7 +305,7 @@ class _DetailCoffeeState extends State<DetailCoffee> {
                 Text(
                   NumberFormat.currency(
                           decimalDigits: 0, locale: 'id_ID', symbol: 'Rp')
-                      .format(widget.coffee.price),
+                      .format(price),
                   style: const TextStyle(
                       fontFamily: "poppinsregular",
                       fontSize: 18,
@@ -301,7 +320,11 @@ class _DetailCoffeeState extends State<DetailCoffee> {
             child: Bounceable(
               onTap: () {
                 Navigator.pushNamed(context, '/keranjang',
-                    arguments: widget.coffee);
+                    arguments: {
+                      'coffee': widget.coffee,
+                      'size': sizeSelected,
+                      'price': price,
+                    });
               },
               child: Container(
                 height: 48,

@@ -4,12 +4,14 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:uas_mobile2/Frontend/PopUp_Dialog/awesome_dialog.dart';
-import 'package:uas_mobile2/Models/coffee.dart';
+import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class Keranjang extends StatefulWidget {
-  const Keranjang({super.key, required this.coffee});
-  final Coffee coffee;
+  const Keranjang({super.key, required this.coffee, required this.price, required this.size});
+  final Coffees coffee;
+  final String size;
+  final int price;
 
   @override
   State<Keranjang> createState() => _KeranjangState();
@@ -171,7 +173,7 @@ class _KeranjangState extends State<Keranjang> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
+              child: Image.network(
                 widget.coffee.image,
                 width: 55,
                 height: 55,
@@ -192,7 +194,7 @@ class _KeranjangState extends State<Keranjang> {
                         color: warnaKopi),
                   ),
                   Text(
-                    '${widget.coffee.type} , S',
+                    '${widget.coffee.category} , ${widget.size}',
                     style: const TextStyle(
                         fontFamily: "poppinsregular",
                         fontSize: 12,
@@ -279,7 +281,7 @@ class _KeranjangState extends State<Keranjang> {
   }
 
   Widget buildPayment() {
-    final int coffeePrice = widget.coffee.price.toInt() * _quantity;
+    final int coffeePrice = widget.price * _quantity;
     final int totalPrice = coffeePrice + shippingCost;
     final NumberFormat currencyFormat =
         NumberFormat.currency(decimalDigits: 0, locale: 'id_ID', symbol: 'Rp');
