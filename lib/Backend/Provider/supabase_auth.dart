@@ -7,7 +7,6 @@ class SupabaseAuthService with ChangeNotifier {
 
   // Status pengguna saat ini
   User? _user;
-
   User? get user => _user;
 
   // Fungsi untuk register user
@@ -83,21 +82,24 @@ class SupabaseAuthService with ChangeNotifier {
   Future<String?> getEmailByUsername(String username) async {
     try {
       final response = await _supabase
-          .from('profile_users') 
+          .from('profile_users')
           .select('email')
           .ilike('username', username)
           .limit(1)
           .maybeSingle();
 
       if (response == null) {
-        log("Tidak ada email yang ditemukan untuk username: $username", name: "SupabaseAuthService");
+        log("Tidak ada email yang ditemukan untuk username: $username",
+            name: "SupabaseAuthService");
         return null;
       }
 
       return response['email'] as String?;
     } catch (e) {
-      log("Kesalahan saat mengambil email berdasarkan username: $e", name: "SupabaseAuthService");
-      throw Exception("Kesalahan saat mengambil email berdasarkan username: $e");
+      log("Kesalahan saat mengambil email berdasarkan username: $e",
+          name: "SupabaseAuthService");
+      throw Exception(
+          "Kesalahan saat mengambil email berdasarkan username: $e");
     }
   }
 
@@ -105,20 +107,104 @@ class SupabaseAuthService with ChangeNotifier {
   Future<String?> getUsernameByUserId(String userId) async {
     try {
       final response = await _supabase
-          .from('profile_users') 
+          .from('profile_users')
           .select('username')
           .eq('id', userId)
           .maybeSingle();
 
       if (response == null || response['username'] == null) {
-        log("Username tidak ditemukan untuk user ID: $userId", name: "SupabaseAuthService");
+        log("Username tidak ditemukan untuk user ID: $userId",
+            name: "SupabaseAuthService");
         return null;
       }
 
       return response['username'] as String?;
     } catch (e) {
-      log("Kesalahan saat mengambil username berdasarkan user ID: $e", name: "SupabaseAuthService");
-      throw Exception("Kesalahan saat mengambil username berdasarkan user ID: $e");
+      log("Kesalahan saat mengambil username berdasarkan user ID: $e",
+          name: "SupabaseAuthService");
+      throw Exception(
+          "Kesalahan saat mengambil username berdasarkan user ID: $e");
+    }
+  }
+
+  // Fungsi untuk mendapatkan nomor HP berdasarkan user ID dari tabel profile_users
+  Future<String?> getPhoneByUserId(String userId) async {
+    try {
+      final response = await _supabase
+          .from('profile_users')
+          .select('phone_number')
+          .eq('id', userId)
+          .maybeSingle();
+
+      if (response == null || response['phone_number'] == null) {
+        log("Nomor HP tidak ditemukan untuk user ID: $userId",
+            name: "SupabaseAuthService");
+        return null;
+      }
+
+      return response['phone_number'] as String?;
+    } catch (e) {
+      log("Error saat mengambil nomor HP untuk user ID: $userId: $e",
+          name: "SupabaseAuthService");
+      throw Exception("Kesalahan saat mengambil nomor HP: $e");
+    }
+  }
+
+// Fungsi untuk memperbarui data profil pengguna
+  Future<void> updateUserProfile({
+    required String userId,
+    required String newUsername,
+    required String newEmail,
+    required String newPhone,
+  }) async {
+    try {
+      final response = await _supabase.from('profile_users').upsert({
+        'id': userId,
+        'username': newUsername,
+        'email': newEmail,
+        'phone_number': newPhone,
+      }).eq('id', userId);
+
+      if (response.error != null) {
+        throw Exception('Error updating profile: ${response.error!.message}');
+      }
+
+      log("User profile updated successfully", name: "SupabaseAuthService");
+    } catch (e) {
+      log("Error updating profile: $e", name: "SupabaseAuthService");
+      throw Exception('Error updating profile: $e');
+    }
+  }
+
+// Fungsi untuk memperbarui password pengguna
+  Future<void> updateUserPassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    try {
+      final user = _supabase.auth.currentUser;
+
+      if (user == null) {
+        throw Exception('Pengguna tidak ditemukan');
+      }
+
+      // Melakukan verifikasi password lama (jika perlu) dan memperbarui password
+      final response = await _supabase.auth.updateUser(
+        UserAttributes(
+          password: newPassword,
+        ),
+      );
+
+      if (response.error != null) {
+        throw Exception(
+            'Gagal memperbarui password: ${response.error!.message}');
+      }
+
+      log("Password berhasil diperbarui", name: "SupabaseAuthService");
+    } catch (e) {
+      log("Kesalahan saat memperbarui password: $e",
+          name: "SupabaseAuthService");
+      throw Exception('Kesalahan saat memperbarui password: $e');
     }
   }
 
@@ -148,6 +234,11 @@ class SupabaseAuthService with ChangeNotifier {
   }
 
   void signOut() {
-    log("signOut method called but not implemented", name: "SupabaseAuthService");
+    log("signOut method called but not implemented",
+        name: "SupabaseAuthService");
   }
+}
+
+extension on UserResponse {
+  get error => null;
 }

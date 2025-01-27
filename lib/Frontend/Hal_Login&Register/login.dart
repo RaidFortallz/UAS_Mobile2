@@ -19,7 +19,8 @@ class _LoginState extends State<Login> {
   bool _isSecurePassword = true;
 
   void _loginUser() async {
-    final authService = Provider.of<SupabaseAuthService>(context, listen: false);
+    final authService =
+        Provider.of<SupabaseAuthService>(context, listen: false);
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
 
@@ -105,7 +106,7 @@ class _LoginState extends State<Login> {
                     Positioned(
                       width: 300,
                       height: 300,
-                      left: 4,
+                      left: 7,
                       child: Container(
                         decoration: const BoxDecoration(
                           image: DecorationImage(

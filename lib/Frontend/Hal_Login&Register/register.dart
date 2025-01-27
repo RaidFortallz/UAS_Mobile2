@@ -40,7 +40,7 @@ class _RegisterState extends State<Register> {
     }
 
     try {
-       await _authService.registerUser(
+      await _authService.registerUser(
         username: username,
         email: email,
         password: password,
@@ -55,8 +55,7 @@ class _RegisterState extends State<Register> {
             desc: "Berhasil Daftar",
             btnOkOnPress: () {
               Navigator.pushReplacementNamed(context, '/login');
-            }
-            );
+            });
       }
     } catch (e) {
       if (mounted) {
@@ -103,7 +102,7 @@ class _RegisterState extends State<Register> {
                     Positioned(
                       width: 210,
                       height: 210,
-                      left: 70,
+                      left: 73,
                       top: 20,
                       child: Container(
                         decoration: const BoxDecoration(

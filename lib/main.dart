@@ -7,6 +7,7 @@ import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/dashboard.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/detail_coffee.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/keranjang.dart';
+import 'package:uas_mobile2/Frontend/Sidebar/profil.dart';
 import 'package:uas_mobile2/Frontend/Sidebar/saldo.dart';
 import 'package:uas_mobile2/Frontend/Sidebar/settings.dart';
 import 'package:uas_mobile2/Frontend/Hal_Login&Register/login.dart';
@@ -59,6 +60,7 @@ class _MyAppState extends State<MyApp> {
         '/login': (context) => const Login(),
         '/saldo': (context) => const SaldoPage(),
         '/settings': (context) => const SettingsPage(),
+        '/profil': (context) => const ProfilePage(),
         '/detail': (context) {
           Coffees coffee =
               ModalRoute.of(context)!.settings.arguments as Coffees;
