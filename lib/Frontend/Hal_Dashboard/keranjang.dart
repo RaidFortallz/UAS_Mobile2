@@ -31,25 +31,23 @@ class _KeranjangState extends State<Keranjang> {
             physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 24),
             children: [
-              const Gap(48),
+              const Gap(40),
               buildHeader(),
               const Gap(24),
-              if (cartItems.isEmpty)
-              const Gap(270),
-                const Expanded(
-                  child: Center(
-                    child: Text(
-                      'Keranjang mu kosong',
-                      style: TextStyle(
-                        fontFamily: "poppinsregular",
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: warnaKopi3,
-                      ),
+              if (cartItems.isEmpty) ...[
+                const Gap(270),
+                const Center(
+                  child: Text(
+                    'Keranjang mu kosong',
+                    style: TextStyle(
+                      fontFamily: "poppinsregular",
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: warnaKopi3,
                     ),
                   ),
                 ),
-              if (cartItems.isNotEmpty) ...[
+              ] else ...[
                 buildAddress(),
                 const Gap(20),
                 buildPurchasedCoffee(cartItems),
@@ -305,12 +303,13 @@ class _KeranjangState extends State<Keranjang> {
                 ),
               ],
             ),
-            const Gap(26),
+            const Gap(20),
             const Divider(
               color: warnaKopi3,
               height: 1,
               thickness: 4,
             ),
+            const Gap(12),
           ],
         );
       }).toList(),

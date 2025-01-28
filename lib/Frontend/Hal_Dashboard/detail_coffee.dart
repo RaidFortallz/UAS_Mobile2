@@ -371,10 +371,10 @@ Widget buildHeader() {
                       width: 8,
                     ),
                     const Text(
-                      'Pesan',
+                      'Masukkan\n keranjang',
                       style: TextStyle(
                           fontFamily: "poppinsregular",
-                          fontSize: 16,
+                          fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: Colors.white),
                     ),

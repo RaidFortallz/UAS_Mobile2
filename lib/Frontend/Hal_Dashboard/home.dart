@@ -4,12 +4,14 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:uas_mobile2/Backend/Provider/cart_provider.dart';
 import 'package:uas_mobile2/Backend/Provider/coffee_service.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/keranjang.dart';
 import 'package:uas_mobile2/Frontend/Sidebar/sidebar.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
+import 'package:badges/badges.dart' as badges;
 
 class HomeFragment extends StatefulWidget {
   const HomeFragment({super.key});
@@ -194,26 +196,60 @@ class _HomeFragmentState extends State<HomeFragment> {
           ),
         ),
         const Gap(16),
-        Bounceable(
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const Keranjang()));
-          },
-          child: Container(
-            height: 52,
-            width: 52,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: warnaKopi3,
-            ),
-            alignment: Alignment.center,
-            child: const ImageIcon(
-              AssetImage('assets/image/ic_bag_border.png'),
-              size: 28,
-              color: Colors.white,
-            ),
-          ),
-        )
+        Consumer<CartProvider>(builder: (context, cartProvider, child) {
+          return Bounceable(
+              onTap: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Keranjang(),
+                  ),
+                );
+              },
+              child: badges.Badge(
+                badgeContent: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                    return SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(1, 0),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    );
+                  },
+                  child: Text(
+                    cartProvider.cartItems.length.toString(),
+                    style: const TextStyle(
+                        fontFamily: "poppinsregular",
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
+                  ),
+                ),
+                badgeStyle: const badges.BadgeStyle(
+                  badgeColor: Colors.redAccent,
+                  elevation: 0,
+                  padding: EdgeInsets.all(8),
+                ),
+                position: badges.BadgePosition.topEnd(top: -4, end: -4),
+                child: Container(
+                  height: 52,
+                  width: 52,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: warnaKopi3,
+                  ),
+                  alignment: Alignment.center,
+                  child: const ImageIcon(
+                    AssetImage('assets/image/ic_bag_border.png'),
+                    size: 28,
+                    color: Colors.white,
+                  ),
+                ),
+              ));
+        })
       ],
     );
   }
@@ -449,7 +485,11 @@ class _HomeFragmentState extends State<HomeFragment> {
                         ),
                       ),
                       Bounceable(
-                        onTap: () {},
+                        onTap: () {
+                          final cartProvider = Provider.of<CartProvider>(context, listen: false);
+
+                          cartProvider.addToCart(coffee, 'S', coffee.price);
+                        },
                         child: Container(
                           height: 32,
                           width: 32,
