@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_mobile2/Backend/Provider/cart_provider.dart';
+
 import 'package:uas_mobile2/Frontend/PopUp_Dialog/awesome_dialog.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
@@ -64,7 +65,7 @@ class _KeranjangState extends State<Keranjang> {
           if (cartProvider.cartItems.isEmpty) {
             return const SizedBox.shrink();
           }
-          return buildOrder();
+          return buildOrder(cartProvider);
         },
       ), // Tombol order di bawah halaman
     );
@@ -208,7 +209,7 @@ class _KeranjangState extends State<Keranjang> {
                         coffee.name,
                         style: const TextStyle(
                           fontFamily: "poppinsregular",
-                          fontSize: 14,
+                          fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: warnaKopi,
                         ),
@@ -224,7 +225,35 @@ class _KeranjangState extends State<Keranjang> {
                     ],
                   ),
                 ),
-                const Gap(16),
+                const Gap(18),
+                Column(
+                  children: [
+                    Bounceable(
+                        onTap: () {
+                          Provider.of<CartProvider>(context, listen: false)
+                              .removeFromCart(coffee, size);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Pesanan ${coffee.name} dihapus',
+                                style: const TextStyle(
+                                    fontFamily: "poppinsregular",
+                                    fontSize: 12,
+                                    color: Colors.white),
+                              ),
+                              backgroundColor: warnaKopi,
+                              duration: const Duration(seconds: 3),
+                            ),
+                          );
+                        },
+                        child: const Icon(
+                          Icons.delete_forever,
+                          color: warnaKopi,
+                          size: 24,
+                        ))
+                  ],
+                ),
+                const Gap(8),
                 Bounceable(
                   onTap: null,
                   child: Row(
@@ -258,7 +287,7 @@ class _KeranjangState extends State<Keranjang> {
                           ),
                         ),
                       ),
-                      const Gap(16),
+                      const Gap(8),
                       SizedBox(
                         width: 28,
                         child: Center(
@@ -273,7 +302,7 @@ class _KeranjangState extends State<Keranjang> {
                           ),
                         ),
                       ),
-                      const Gap(16),
+                      const Gap(8),
                       // Button Increment
                       GestureDetector(
                         onTap: () {
@@ -409,21 +438,22 @@ class _KeranjangState extends State<Keranjang> {
     );
   }
 
-  Widget buildOrder() {
+  Widget buildOrder(CartProvider cartProvider) {
     return Bounceable(
       onTap: () {
-        final cartProvider = Provider.of<CartProvider>(context, listen: false);
-        cartProvider.clearCart();
+
+        cartProvider.placeOrder();
 
         CustomDialog.showDialog(
-            context: context,
-            dialogType: DialogType.success,
-            animType: AnimType.bottomSlide,
-            title: "Sukses",
-            desc: "Berhasil Pesan Coffee",
-            btnOkOnPress: () {
-              Navigator.pop(context);
-            });
+          context: context,
+          dialogType: DialogType.success,
+          animType: AnimType.bottomSlide,
+          title: "Sukses",
+          desc: "Berhasil Pesan Coffee",
+          btnOkOnPress: () {
+            cartProvider.clearCart();
+          },
+        );
       },
       child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),

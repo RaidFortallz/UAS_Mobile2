@@ -40,8 +40,10 @@ class _HomeFragmentState extends State<HomeFragment> {
     _getUserInfo();
 
     Future.microtask(() {
-      final coffeeService = Provider.of<CoffeeService>(context, listen: false);
+      if (mounted) {
+        final coffeeService = Provider.of<CoffeeService>(context, listen: false);
       coffeeService.fetchCoffees();
+      }
     });
   }
 
@@ -54,10 +56,13 @@ class _HomeFragmentState extends State<HomeFragment> {
       final userId = user.id;
       final usernameFromDb = await authService.getUsernameByUserId(userId);
 
-      setState(() {
+      if (mounted) {
+        setState(() {
         username = usernameFromDb ?? 'Pengguna';
       });
     }
+      }
+      
   }
 
   @override
@@ -486,9 +491,23 @@ class _HomeFragmentState extends State<HomeFragment> {
                       ),
                       Bounceable(
                         onTap: () {
-                          final cartProvider = Provider.of<CartProvider>(context, listen: false);
+                          final cartProvider =
+                              Provider.of<CartProvider>(context, listen: false);
 
                           cartProvider.addToCart(coffee, 'S', coffee.price);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Pesanan ${coffee.name} ditambahkan ke keranjang',
+                                style: const TextStyle(
+                                    fontFamily: "poppinsregular",
+                                    fontSize: 12,
+                                    color: Colors.white,),
+                              ),
+                              backgroundColor: warnaKopi2,
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
                         },
                         child: Container(
                           height: 32,

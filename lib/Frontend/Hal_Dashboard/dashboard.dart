@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:uas_mobile2/Frontend/Hal_Dashboard/favorite.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/home.dart';
-import 'package:uas_mobile2/Frontend/Hal_Dashboard/Favorite.dart';
 import 'package:gap/gap.dart';
+import 'package:uas_mobile2/Frontend/Hal_Dashboard/pengiriman.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -13,7 +14,13 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   int indexMenu = 0;
-  final menu = [
+  
+
+  @override
+  Widget build(BuildContext context) {
+    
+
+    final menu = [
     {
       'icon': 'assets/image/ic_home_border.png',
       'icon_active': 'assets/image/ic_home_filled.png',
@@ -22,14 +29,12 @@ class _DashboardPageState extends State<DashboardPage> {
     {
       'icon': 'assets/image/ic_heart_border.png',
       'icon_active': 'assets/image/ic_heart_border.png',
-      'fragment': const FavoritePage()
+      'fragment': const FavoriteFragment()
     },
     {
       'icon': 'assets/image/bike.png',
       'icon_active': 'assets/image/bike.png',
-      'fragment': const Center(
-        child: Text('PENGIRIMAN'),
-      ),
+      'fragment': const PengirimanFragment()
     },
     {
       'icon': 'assets/image/ic_notification_border.png',
@@ -40,8 +45,6 @@ class _DashboardPageState extends State<DashboardPage> {
     },
   ];
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body: menu[indexMenu]['fragment'] as Widget,
       bottomNavigationBar: Padding(

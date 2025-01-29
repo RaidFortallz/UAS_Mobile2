@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:uas_mobile2/Backend/Provider/favorite_provider.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 
-class FavoritePage extends StatelessWidget {
-  const FavoritePage({super.key});
+class FavoriteFragment extends StatelessWidget {
+  const FavoriteFragment({super.key});
 
   @override
   Widget build(BuildContext context) {
