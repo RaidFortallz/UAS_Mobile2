@@ -66,48 +66,76 @@ class _DetailCoffeeState extends State<DetailCoffee> {
     );
   }
 
-Widget buildHeader() {
-  final favoriteProvider = Provider.of<FavoriteProvider>(context);
+  Widget buildHeader() {
+    final favoriteProvider = Provider.of<FavoriteProvider>(context);
 
-  bool isFavorite = favoriteProvider.isFavorite(widget.coffee);
+    bool isFavorite = favoriteProvider.isFavorite(widget.coffee);
 
-  return Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [
-    IconButton(
-      onPressed: () => Navigator.pop(context),
-      icon: const ImageIcon(
-        AssetImage('assets/image/ic_arrow_left.png'),
-      ),
-    ),
-    const Text(
-      'Detail',
-      style: TextStyle(
-          fontFamily: "poppinsregular",
-          fontWeight: FontWeight.w600,
-          fontSize: 16,
-          color: warnaKopi2),
-    ),
-    IconButton(
-      onPressed: () {
-        setState(() {
-          if (isFavorite) {
-            favoriteProvider.removeFavorite(widget.coffee);
-          } else {
-            favoriteProvider.addFavorite(widget.coffee);
-          }
-        });
-      },
-      icon: ImageIcon(
-        const AssetImage('assets/image/ic_heart_border.png'), // Tetap menggunakan ikon yang sama
-        color: isFavorite ? Colors.red : warnaKopi2, // Merah jika difavoritkan, warna asal jika tidak
-      ),
-    ),
-  ],
-);
-}
-
-
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const ImageIcon(
+            AssetImage('assets/image/ic_arrow_left.png'),
+          ),
+        ),
+        const Text(
+          'Detail',
+          style: TextStyle(
+              fontFamily: "poppinsregular",
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              color: warnaKopi2),
+        ),
+        IconButton(
+          onPressed: () {
+            setState(() {
+              if (isFavorite) {
+                favoriteProvider.removeFavorite(widget.coffee);
+                 ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    '${widget.coffee.name} dihapus dari favorit.',
+                    style: const TextStyle(
+                      fontFamily: "poppinsregular",
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+                  ),
+                  backgroundColor: warnaKopi2,
+                  duration: const Duration(seconds: 1),
+                ),
+                 );
+              } else {
+                favoriteProvider.addFavorite(widget.coffee);
+                ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    '${widget.coffee.name} ditambahkan ke favorit.',
+                    style: const TextStyle(
+                      fontFamily: "poppinsregular",
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+                  ),
+                  backgroundColor: warnaKopi2,
+                  duration: const Duration(seconds: 1),
+                ),
+              );
+              }
+            });
+          },
+          icon: ImageIcon(
+            AssetImage(isFavorite
+                ? 'assets/image/ic_favorite_active.png'
+                : 'assets/image/ic_heart_border.png'),
+            color: isFavorite ? Colors.red : warnaKopi2,
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget buildImage() {
     return ClipRRect(
@@ -344,13 +372,13 @@ Widget buildHeader() {
                 cartProvider.addToCart(widget.coffee, sizeSelected, price);
 
                 CustomDialog.showDialog(
-                    context: context,
-                    dialogType: DialogType.success,
-                    animType: AnimType.bottomSlide,
-                    title: "Sukses",
-                    desc: "Pesanan dimasukkan ke keranjang",
-                    btnOkOnPress: () {},
-                    );
+                  context: context,
+                  dialogType: DialogType.success,
+                  animType: AnimType.bottomSlide,
+                  title: "Sukses",
+                  desc: "Pesanan dimasukkan ke keranjang",
+                  btnOkOnPress: () {},
+                );
               },
               child: Container(
                 height: 48,

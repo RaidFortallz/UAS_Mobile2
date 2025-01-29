@@ -44,7 +44,7 @@ class _KeranjangState extends State<Keranjang> {
                       fontFamily: "poppinsregular",
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
-                      color: warnaKopi3,
+                      color: warnaKopi2,
                     ),
                   ),
                 ),

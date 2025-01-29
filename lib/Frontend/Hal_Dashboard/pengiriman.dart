@@ -23,20 +23,6 @@ class _PengirimanFragmentState extends State<PengirimanFragment> {
     print('Order Placed: ${cartProvider.orderPlaced}');
     print('Cart Items: $orderItems');
 
-    if (!cartProvider.orderPlaced) {
-      return const Center(
-        child: Text(
-          'Belum ada pesanan.',
-          style: TextStyle(
-            fontFamily: "poppinsregular",
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: warnaKopi,
-          ),
-        ),
-      );
-    }
-
     return Scaffold(
       body: ListView(
         physics: const BouncingScrollPhysics(),
@@ -45,8 +31,23 @@ class _PengirimanFragmentState extends State<PengirimanFragment> {
           const Gap(60),
           buildHeader(),
           const Gap(18),
-          buildDelivery(orderItems, totalPrice),
-          const Gap(18),
+          
+          if (cartProvider.orderItems.isEmpty) ...[
+            const Gap(270),
+            const Center(
+              child: Text(
+                'Belum ada pengiriman.',
+                style: TextStyle(
+                  fontFamily: "poppinsregular",
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: warnaKopi,
+                ),
+              ),
+            ),
+          ] else ...[
+            buildDelivery(orderItems, totalPrice),
+          ],
         ],
       ),
     );
@@ -81,7 +82,7 @@ class _PengirimanFragmentState extends State<PengirimanFragment> {
       children: orderItems.map((item) {
         final coffee = item['coffee'] as Coffees;
         final quantity = item['quantity'] as int;
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -133,7 +134,7 @@ class _PengirimanFragmentState extends State<PengirimanFragment> {
                           ),
                         ),
                         Text(
-                          'Total Harga: Rp${item['totalPrice']}',
+                          'Harga: Rp${item['totalPrice']}',
                           style: const TextStyle(
                             fontFamily: "poppinsregular",
                             fontSize: 12,
