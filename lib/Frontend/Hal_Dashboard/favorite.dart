@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
@@ -21,22 +22,32 @@ class FavoriteFragment extends StatelessWidget {
         children: [
           const Gap(60),
           buildHeader(),
-          const Gap(18),                  
+          const Gap(18),
           if (favorite.isEmpty) ...[
-            const Gap(270),
-            const Center(
-              child: Text(
-                'Belum ada kopi favorit.',
-                style: TextStyle(
-                  fontFamily: "poppinsregular",
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: warnaKopi,
-                ),
+            const Gap(180),
+            Center(
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/image/ic_heart_border.png',
+                    height: 150,
+                    width: 150,
+                    color: warnaKopi2,
+                  ),
+                  const Text(
+                    'Belum ada kopi favorit.',
+                    style: TextStyle(
+                      fontFamily: "poppinsregular",
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: warnaKopi,
+                    ),
+                  ),
+                ],
               ),
             ),
           ] else ...[
-            buildGridCoffee(context), 
+            buildGridCoffee(context),
           ],
         ],
       ),
@@ -101,11 +112,12 @@ class FavoriteFragment extends StatelessWidget {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            coffee.image,
-                            height: 128,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
+                          child: CachedNetworkImage(
+                          imageUrl: coffee.image,
+                          height: 128,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
                           ),
                         ),
                         Align(

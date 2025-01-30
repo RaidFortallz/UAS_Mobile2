@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
@@ -93,36 +94,36 @@ class _DetailCoffeeState extends State<DetailCoffee> {
             setState(() {
               if (isFavorite) {
                 favoriteProvider.removeFavorite(widget.coffee);
-                 ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    '${widget.coffee.name} dihapus dari favorit.',
-                    style: const TextStyle(
-                      fontFamily: "poppinsregular",
-                      fontSize: 12,
-                      color: Colors.white,
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      '${widget.coffee.name} dihapus dari favorit.',
+                      style: const TextStyle(
+                        fontFamily: "poppinsregular",
+                        fontSize: 12,
+                        color: Colors.white,
+                      ),
                     ),
+                    backgroundColor: warnaKopi2,
+                    duration: const Duration(seconds: 1),
                   ),
-                  backgroundColor: warnaKopi2,
-                  duration: const Duration(seconds: 1),
-                ),
-                 );
+                );
               } else {
                 favoriteProvider.addFavorite(widget.coffee);
                 ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    '${widget.coffee.name} ditambahkan ke favorit.',
-                    style: const TextStyle(
-                      fontFamily: "poppinsregular",
-                      fontSize: 12,
-                      color: Colors.white,
+                  SnackBar(
+                    content: Text(
+                      '${widget.coffee.name} ditambahkan ke favorit.',
+                      style: const TextStyle(
+                        fontFamily: "poppinsregular",
+                        fontSize: 12,
+                        color: Colors.white,
+                      ),
                     ),
+                    backgroundColor: warnaKopi2,
+                    duration: const Duration(seconds: 1),
                   ),
-                  backgroundColor: warnaKopi2,
-                  duration: const Duration(seconds: 1),
-                ),
-              );
+                );
               }
             });
           },
@@ -140,11 +141,12 @@ class _DetailCoffeeState extends State<DetailCoffee> {
   Widget buildImage() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
-      child: Image.network(
-        widget.coffee.image,
-        width: double.infinity,
+      child: CachedNetworkImage(
+        imageUrl: widget.coffee.image,
         height: 202,
+        width: double.infinity,
         fit: BoxFit.cover,
+        errorWidget: (context, url, error) => const Icon(Icons.error),
       ),
     );
   }

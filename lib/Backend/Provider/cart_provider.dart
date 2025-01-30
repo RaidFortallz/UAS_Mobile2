@@ -3,7 +3,7 @@ import 'package:uas_mobile2/Models/coffee_model.dart';
 
 class CartProvider with ChangeNotifier {
   final List<Map<String, dynamic>> _cartItems = [];
-  List<Map<String, dynamic>> _orderItems = []; // Daftar item pesanan
+  final List<Map<String, dynamic>> _orderItems = []; // Daftar item pesanan
   bool _orderPlaced = false; //  Status pesanan
   int _totalPrice = 0;
 

@@ -208,6 +208,78 @@ class SupabaseAuthService with ChangeNotifier {
     }
   }
 
+  //Fungsi untuk memperbarui alamat dan kota user
+  Future<void> updateAddress({
+    required String userId,
+    required String city,
+    required String address,
+    required String phoneNumber,
+  }) async {
+    try {
+      final response = await _supabase
+          .from('profile_users')
+          .select('username, email')
+          .eq('id', userId)
+          .maybeSingle();
+
+      if (response == null || response['username'] == null) {
+        throw Exception('Username tidak ditemukan');
+      }
+
+      final username = response['username'];
+      final email = response['email'];
+
+      // Lakukan upsert dengan menambahkan username dan email
+      await _supabase.from('profile_users').upsert({
+        'id': userId,
+        'username': username,
+        'email': email,
+        'city': city,
+        'address': address,
+        'phone_number': phoneNumber,
+      }).eq('id', userId);
+
+      log("Address updated successfully", name: "SupabaseAuthService");
+    } catch (e) {
+      log("Error updating address: $e", name: "SupabaseAuthService");
+      throw Exception('Error updating address: $e');
+    }
+  }
+
+  // Fungsi untuk mendapatkan alamat pengguna dari Supabase
+   Future<Map<String, String>> getUserAddress(String userId) async {
+    try {
+      final response = await _supabase
+          .from('profile_users') 
+          .select('city, address, phone_number')
+          .eq('id', userId)
+          .maybeSingle();
+
+      if (response == null) {
+        return {
+          'city': '',
+          'address': '',
+          'phoneNumber': '',
+        };
+      }
+
+      return {
+        'city': response['city'] as String? ?? '',
+        'address': response['address'] as String? ?? '',
+        'phoneNumber': response['phone_number'] as String? ?? '',
+      };
+    } catch (error) {
+      print('Error mengambil alamat pengguna: $error');
+      return {
+        'city': '',
+        'address': '',
+        'phoneNumber': '',
+      };
+    }
+  }
+
+
+
   // Fungsi untuk logout user
   Future<void> logout() async {
     try {

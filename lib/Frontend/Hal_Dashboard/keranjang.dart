@@ -5,6 +5,8 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_mobile2/Backend/Provider/cart_provider.dart';
+import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
+import 'package:uas_mobile2/Frontend/Hal_Dashboard/Alamat/edit_alamat.dart';
 
 import 'package:uas_mobile2/Frontend/PopUp_Dialog/awesome_dialog.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
@@ -19,6 +21,48 @@ class Keranjang extends StatefulWidget {
 
 class _KeranjangState extends State<Keranjang> {
   final int shippingCost = 5000;
+
+  String city = '';
+  String address = '';
+  String phoneNumber = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserAddress();
+  }
+
+  void _fetchUserAddress() async {
+    final supabaseAuthService =
+        Provider.of<SupabaseAuthService>(context, listen: false);
+    final userId = supabaseAuthService.getCurrentUser()?.id;
+
+    if (userId != null) {
+      try {
+        final userAddress = await supabaseAuthService.getUserAddress(userId);
+
+        setState(() {
+          city = userAddress['city'] ?? '';
+          address = userAddress['address'] ?? '';
+          phoneNumber = userAddress['phoneNumber'] ?? '';
+        });
+      } catch (e) {
+        setState(() {
+          city = 'Gagal memuat';
+          address = 'Gagal memuat';
+          phoneNumber = 'Gagal memuat';
+        });
+      }
+    }
+  }
+
+  void updateAddress(String newCity, String newAddress, String newPhoneNumber) {
+    setState(() {
+      city = newCity;
+      address = newAddress;
+      phoneNumber = newPhoneNumber;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +111,7 @@ class _KeranjangState extends State<Keranjang> {
           }
           return buildOrder(cartProvider);
         },
-      ), // Tombol order di bawah halaman
+      ),
     );
   }
 
@@ -111,29 +155,40 @@ class _KeranjangState extends State<Keranjang> {
               fontWeight: FontWeight.w600,
               color: warnaKopi),
         ),
-        const Gap(14),
-        const Text(
-          'Jl. Moh Toha',
-          style: TextStyle(
+        const Gap(6),
+         Text(
+          city.isNotEmpty ? city : 'Kota: Belum diisi.',
+          style: const TextStyle(
               fontFamily: "poppinsregular",
               fontSize: 14,
               fontWeight: FontWeight.w600,
               color: warnaKopi),
         ),
         const Gap(4),
-        const Text(
-          'Jl. Moh Toha, Gg Jawir, no.27, rt03/rw04',
-          style: TextStyle(
+         Text(
+          address.isNotEmpty ? address : 'Alamat: Belum diisi.',
+          style: const TextStyle(
               fontFamily: "poppinsregular",
               fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: warnaAbu),
+              
+              color: warnaKopi2),
+        ),
+        const Gap(4),
+         Text(
+          phoneNumber.isNotEmpty ? 'No Hp: $phoneNumber' : 'No Hp: Belum diisi',
+          style: const TextStyle(
+              fontFamily: "poppinsregular",
+              fontSize: 12,
+              
+              color: warnaKopi2),
         ),
         const Gap(12),
         Row(
           children: [
             Bounceable(
-              onTap: () {},
+              onTap: () {
+                showEditAddressDialog(context, updateAddress, city, address, phoneNumber);
+              },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 alignment: Alignment.center,

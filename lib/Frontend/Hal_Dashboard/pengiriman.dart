@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_mobile2/Backend/Provider/cart_provider.dart';
+import 'package:uas_mobile2/Frontend/Hal_Dashboard/Maps/lacak_pesanan.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
@@ -31,7 +33,6 @@ class _PengirimanFragmentState extends State<PengirimanFragment> {
           const Gap(60),
           buildHeader(),
           const Gap(18),
-          
           if (cartProvider.orderItems.isEmpty) ...[
             const Gap(270),
             const Center(
@@ -46,7 +47,7 @@ class _PengirimanFragmentState extends State<PengirimanFragment> {
               ),
             ),
           ] else ...[
-            buildDelivery(orderItems, totalPrice),
+            buildDelivery(orderItems, totalPrice, context),
           ],
         ],
       ),
@@ -76,7 +77,8 @@ class _PengirimanFragmentState extends State<PengirimanFragment> {
     );
   }
 
-  Widget buildDelivery(List<Map<String, dynamic>> orderItems, int totalPrice) {
+  Widget buildDelivery(List<Map<String, dynamic>> orderItems, int totalPrice,
+      BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: orderItems.map((item) {
@@ -104,12 +106,13 @@ class _PengirimanFragmentState extends State<PengirimanFragment> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      coffee.image,
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                    ),
+                    child: CachedNetworkImage(
+                          imageUrl: coffee.image,
+                          height: 60,
+                          width: 60,
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                          ),
                   ),
                   const Gap(16),
                   Expanded(
@@ -172,28 +175,34 @@ class _PengirimanFragmentState extends State<PengirimanFragment> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Bounceable(
-                          onTap: () {
-                            // Aksi Lacak Pesanan
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: warnaKopi3,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: warnaKopi2,
-                                width: 1,
+                        child: Builder(
+                          builder: (context) => Bounceable(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const TrackOrdersMap()));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: warnaKopi3,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: warnaKopi2,
+                                  width: 1,
+                                ),
                               ),
-                            ),
-                            child: const Text(
-                              'Lacak Pesanan',
-                              style: TextStyle(
-                                fontFamily: "poppinsregular",
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
+                              child: const Text(
+                                'Lacak Pesanan',
+                                style: TextStyle(
+                                  fontFamily: "poppinsregular",
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),

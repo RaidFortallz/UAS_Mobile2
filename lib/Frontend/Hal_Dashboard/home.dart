@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
@@ -405,12 +406,14 @@ class _HomeFragmentState extends State<HomeFragment> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          coffee.image,
+                        child: 
+                        CachedNetworkImage(
+                          imageUrl: coffee.image,
                           height: 128,
                           width: double.infinity,
                           fit: BoxFit.cover,
-                        ),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                          ),
                       ),
                       Align(
                         alignment: Alignment.topRight,
