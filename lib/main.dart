@@ -7,7 +7,7 @@ import 'package:uas_mobile2/Backend/Provider/coffee_service.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/dashboard.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/detail_coffee.dart';
-import 'package:uas_mobile2/Frontend/Sidebar/profil.dart';
+import 'package:uas_mobile2/Frontend/Sidebar/profile.dart';
 import 'package:uas_mobile2/Frontend/Sidebar/saldo.dart';
 import 'package:uas_mobile2/Frontend/Sidebar/settings.dart';
 import 'package:uas_mobile2/Frontend/Hal_Login&Register/login.dart';
@@ -26,7 +26,7 @@ void main() async {
     url: 'https://ppniihvttatatvdmzbeo.supabase.co',
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwbmlpaHZ0dGF0YXR2ZG16YmVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc4ODI4NDAsImV4cCI6MjA1MzQ1ODg0MH0.rtJpnEVuqSN1jcbOgJPXZ3OsGwEngTzaZCk8NGYHj4Y',
-  ); 
+  );
 
   runApp(MultiProvider(
     providers: [
@@ -34,7 +34,6 @@ void main() async {
       ChangeNotifierProvider(create: (_) => CoffeeService()),
       ChangeNotifierProvider(create: (_) => CartProvider()),
       ChangeNotifierProvider(create: (_) => FavoriteProvider()),
-
     ],
     child: const MyApp(),
   ));

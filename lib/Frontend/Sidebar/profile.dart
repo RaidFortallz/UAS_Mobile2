@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:uas_mobile2/Frontend/Sidebar/editprofil.dart';
+import 'package:uas_mobile2/Frontend/Sidebar/edit_profile.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 
@@ -24,6 +24,12 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+    _loadProfile();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _loadProfile();
   }
 
@@ -78,13 +84,17 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   // Fungsi untuk menavigasi ke halaman edit profil
-  void _navigateToEditProfile() {
-    Navigator.push(
+  void _navigateToEditProfile() async {
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const EditProfilePage(),
       ),
     );
+
+    if (result == true) {
+      _loadProfile(); // Memuat ulang profil jika ada perubahan
+    }
   }
 
   @override

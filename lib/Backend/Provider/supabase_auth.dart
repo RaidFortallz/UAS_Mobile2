@@ -150,7 +150,7 @@ class SupabaseAuthService with ChangeNotifier {
     }
   }
 
-// Fungsi untuk memperbarui data profil pengguna
+  // Fungsi untuk memperbarui data profil pengguna
   Future<void> updateUserProfile({
     required String userId,
     required String newUsername,
@@ -158,25 +158,19 @@ class SupabaseAuthService with ChangeNotifier {
     required String newPhone,
   }) async {
     try {
-      final response = await _supabase.from('profile_users').upsert({
-        'id': userId,
+      await _supabase.from('profile_users').update({
         'username': newUsername,
         'email': newEmail,
         'phone_number': newPhone,
       }).eq('id', userId);
 
-      if (response.error != null) {
-        throw Exception('Error updating profile: ${response.error!.message}');
-      }
-
-      log("User profile updated successfully", name: "SupabaseAuthService");
+      log("Profil berhasil diperbarui", name: "SupabaseAuthService");
     } catch (e) {
-      log("Error updating profile: $e", name: "SupabaseAuthService");
-      throw Exception('Error updating profile: $e');
+      log("Error memperbarui profil: $e", name: "SupabaseAuthService");
+      throw Exception("Error memperbarui profil: $e");
     }
   }
 
-// Fungsi untuk memperbarui password pengguna
   Future<void> updateUserPassword({
     required String currentPassword,
     required String newPassword,
@@ -188,23 +182,43 @@ class SupabaseAuthService with ChangeNotifier {
         throw Exception('Pengguna tidak ditemukan');
       }
 
-      // Melakukan verifikasi password lama (jika perlu) dan memperbarui password
-      final response = await _supabase.auth.updateUser(
-        UserAttributes(
-          password: newPassword,
-        ),
-      );
-
-      if (response.error != null) {
-        throw Exception(
-            'Gagal memperbarui password: ${response.error!.message}');
+      // Verifikasi password lama terlebih dahulu
+      final isPasswordCorrect = await verifyCurrentPassword(currentPassword);
+      if (!isPasswordCorrect) {
+        throw Exception('Password lama salah');
       }
+
+      // Jika password lama benar, lanjutkan dengan pembaruan password
+      await _supabase.auth.updateUser(
+        UserAttributes(password: newPassword),
+      );
 
       log("Password berhasil diperbarui", name: "SupabaseAuthService");
     } catch (e) {
-      log("Kesalahan saat memperbarui password: $e",
-          name: "SupabaseAuthService");
-      throw Exception('Kesalahan saat memperbarui password: $e');
+      log("Kesalahan memperbarui password: $e", name: "SupabaseAuthService");
+      throw Exception("Kesalahan memperbarui password: $e");
+    }
+  }
+
+  // Fungsi untuk memverifikasi password lama pengguna
+  Future<bool> verifyCurrentPassword(String currentPassword) async {
+    final user = _supabase.auth.currentUser;
+
+    if (user == null) {
+      return false;
+    }
+
+    try {
+      final response = await _supabase.auth.signInWithPassword(
+        email: user.email!,
+        password: currentPassword,
+      );
+
+      // Jika responsnya valid (user ditemukan), return true
+      return response.user != null;
+    } catch (e) {
+      // Jika ada kesalahan saat verifikasi, return false
+      return false;
     }
   }
 
@@ -247,10 +261,10 @@ class SupabaseAuthService with ChangeNotifier {
   }
 
   // Fungsi untuk mendapatkan alamat pengguna dari Supabase
-   Future<Map<String, String>> getUserAddress(String userId) async {
+  Future<Map<String, String>> getUserAddress(String userId) async {
     try {
       final response = await _supabase
-          .from('profile_users') 
+          .from('profile_users')
           .select('city, address, phone_number')
           .eq('id', userId)
           .maybeSingle();
@@ -277,8 +291,6 @@ class SupabaseAuthService with ChangeNotifier {
       };
     }
   }
-
-
 
   // Fungsi untuk logout user
   Future<void> logout() async {
@@ -309,8 +321,4 @@ class SupabaseAuthService with ChangeNotifier {
     log("signOut method called but not implemented",
         name: "SupabaseAuthService");
   }
-}
-
-extension on UserResponse {
-  get error => null;
 }
