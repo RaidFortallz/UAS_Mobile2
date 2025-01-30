@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/favorite.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/home.dart';
 import 'package:gap/gap.dart';
+import 'package:uas_mobile2/Frontend/Hal_Dashboard/notifikasi.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/pengiriman.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
@@ -39,9 +40,7 @@ class _DashboardPageState extends State<DashboardPage> {
     {
       'icon': 'assets/image/ic_notification_border.png',
       'icon_active': 'assets/image/ic_notification_border.png',
-      'fragment': const Center(
-        child: Text('NOTIFIKASI'),
-      ),
+      'fragment':  const NotifikasiFragment()
     },
   ];
 
