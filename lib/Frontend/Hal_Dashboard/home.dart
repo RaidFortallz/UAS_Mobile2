@@ -9,6 +9,7 @@ import 'package:uas_mobile2/Backend/Provider/cart_provider.dart';
 import 'package:uas_mobile2/Backend/Provider/coffee_service.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/keranjang.dart';
+import 'package:uas_mobile2/Frontend/Hal_Pencarian/search_coffee.dart';
 import 'package:uas_mobile2/Frontend/Sidebar/sidebar.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
@@ -23,6 +24,7 @@ class HomeFragment extends StatefulWidget {
 
 class _HomeFragmentState extends State<HomeFragment> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final TextEditingController searchContoller = TextEditingController();
   int _currentIndex = 0;
   String categorySelected = 'All Coffee';
   String username = '';
@@ -42,8 +44,9 @@ class _HomeFragmentState extends State<HomeFragment> {
 
     Future.microtask(() {
       if (mounted) {
-        final coffeeService = Provider.of<CoffeeService>(context, listen: false);
-      coffeeService.fetchCoffees();
+        final coffeeService =
+            Provider.of<CoffeeService>(context, listen: false);
+        coffeeService.fetchCoffees();
       }
     });
   }
@@ -59,11 +62,10 @@ class _HomeFragmentState extends State<HomeFragment> {
 
       if (mounted) {
         setState(() {
-        username = usernameFromDb ?? 'Pengguna';
-      });
-    }
+          username = usernameFromDb ?? 'Pengguna';
+        });
       }
-      
+    }
   }
 
   @override
@@ -172,20 +174,17 @@ class _HomeFragmentState extends State<HomeFragment> {
               color: const Color(0xffF9F9F9),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: const Row(
+            child: Row(
               children: [
-                ImageIcon(
+                const ImageIcon(
                   AssetImage('assets/image/ic_search.png'),
                   color: warnaKopi3,
                 ),
-                Gap(8),
+                const Gap(8),
                 Expanded(
                   child: TextField(
-                    style: TextStyle(
-                        fontFamily: "poppinsregular",
-                        fontSize: 14,
-                        color: Colors.black12),
-                    decoration: InputDecoration(
+                    controller: searchContoller,
+                    decoration: const InputDecoration(
                       contentPadding: EdgeInsets.all(0),
                       isDense: true,
                       border: InputBorder.none,
@@ -195,6 +194,17 @@ class _HomeFragmentState extends State<HomeFragment> {
                           fontSize: 14,
                           color: warnaAbu),
                     ),
+                    onSubmitted: (query) {
+                      if (query.isNotEmpty) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                SearchResultPage(query: query),
+                          ),
+                        );
+                      }
+                    },
                   ),
                 )
               ],
@@ -406,14 +416,14 @@ class _HomeFragmentState extends State<HomeFragment> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: 
-                        CachedNetworkImage(
+                        child: CachedNetworkImage(
                           imageUrl: coffee.image,
                           height: 128,
                           width: double.infinity,
                           fit: BoxFit.cover,
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
-                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
                       ),
                       Align(
                         alignment: Alignment.topRight,
@@ -503,9 +513,10 @@ class _HomeFragmentState extends State<HomeFragment> {
                               content: Text(
                                 'Pesanan ${coffee.name} ditambahkan ke keranjang',
                                 style: const TextStyle(
-                                    fontFamily: "poppinsregular",
-                                    fontSize: 12,
-                                    color: Colors.white,),
+                                  fontFamily: "poppinsregular",
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                ),
                               ),
                               backgroundColor: warnaKopi2,
                               duration: const Duration(seconds: 1),

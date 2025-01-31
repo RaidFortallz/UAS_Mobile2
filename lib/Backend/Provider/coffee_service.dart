@@ -20,14 +20,11 @@ class CoffeeService with ChangeNotifier {
     notifyListeners();
 
     try {
-      // Mengambil data kopi dari Supabase menggunakan select
-      final response = await supabase
-          .from('coffees')
-          .select();
+      final response = await supabase.from('coffees').select();
 
       // Jika data berhasil diambil, parsing data menjadi list Coffee
       _coffees = response.map((item) => Coffees.fromJson(item)).toList();
-        } catch (e) {
+    } catch (e) {
       _errorMessage = 'Error fetching data: $e';
       print(_errorMessage);
     } finally {

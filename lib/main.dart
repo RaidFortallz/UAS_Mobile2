@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uas_mobile2/Backend/Provider/cart_provider.dart';
 import 'package:uas_mobile2/Backend/Provider/coffee_service.dart';
+import 'package:uas_mobile2/Backend/Provider/search_provider.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/dashboard.dart';
 import 'package:uas_mobile2/Frontend/Hal_Dashboard/detail_coffee.dart';
@@ -34,6 +35,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => CoffeeService()),
       ChangeNotifierProvider(create: (_) => CartProvider()),
       ChangeNotifierProvider(create: (_) => FavoriteProvider()),
+      ChangeNotifierProvider(create: (_) => SearchProvider()),
     ],
     child: const MyApp(),
   ));
