@@ -3,14 +3,16 @@ import 'package:uas_mobile2/Models/coffee_model.dart';
 
 class CartProvider with ChangeNotifier {
   final List<Map<String, dynamic>> _cartItems = [];
-  final List<Map<String, dynamic>> _orderItems = []; // Daftar item pesanan
-  bool _orderPlaced = false; //  Status pesanan
+  final List<Map<String, dynamic>> _orderItems = [];
+  final List<Map<String, dynamic>> _notificationItems = [];
+  bool _orderPlaced = false;
   int _totalPrice = 0;
 
   List<Map<String, dynamic>> get cartItems => _cartItems;
   List<Map<String, dynamic>> get orderItems => _orderItems;
+  List<Map<String, dynamic>> get notificationItems => _notificationItems;
   bool get orderPlaced => _orderPlaced;
-  int get totalPrice => _totalPrice; //  Ambil total harga pesanan
+  int get totalPrice => _totalPrice;
 
   void addToCart(Coffees coffee, String size, int price) {
     int index = _cartItems.indexWhere(
@@ -26,7 +28,7 @@ class CartProvider with ChangeNotifier {
         'price': price,
       });
     }
-    calculateTotalPrice(); //
+    calculateTotalPrice();
   }
 
   void updateQuantity(Coffees coffee, String size, int newQuantity) {
@@ -34,7 +36,7 @@ class CartProvider with ChangeNotifier {
         .indexWhere((item) => item['coffee'] == coffee && item['size'] == size);
     if (itemIndex != -1) {
       _cartItems[itemIndex]['quantity'] = newQuantity;
-      calculateTotalPrice(); //
+      calculateTotalPrice();
     }
   }
 
@@ -55,18 +57,20 @@ class CartProvider with ChangeNotifier {
       final quantity = item['quantity'] as int;
       _totalPrice += price * quantity;
     }
-    notifyListeners(); //
+    notifyListeners();
   }
 
   void clearCart() {
     _cartItems.clear();
-    calculateTotalPrice(); //
+    _orderPlaced = false;
+    _totalPrice = 0;
+    notifyListeners();
   }
 
   void removeFromCart(Coffees coffee, String size) {
     _cartItems.removeWhere(
         (item) => item['coffee'] == coffee && item['size'] == size);
-    calculateTotalPrice(); //
+    calculateTotalPrice();
   }
 
   void removeOrderItem(Map<String, dynamic> item) {
@@ -77,23 +81,36 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void removeNotificationItem(Map<String, dynamic> item) {
+    _notificationItems.remove(item);
+    notifyListeners();
+  }
+
   void placeOrder() {
     _orderPlaced = true;
+
     for (var item in _cartItems) {
-      _orderItems.add({
+      var orderItem = {
         'coffee': item['coffee'],
+        'size': item['size'],
         'quantity': item['quantity'],
-        'totalPrice':
-            (item['coffee'].price * item['quantity']), // Simpan harga spesifik
-      });
+        'price': item['price'],
+        'totalPrice': item['price'] * item['quantity'],
+      };
+
+      _orderItems.add(orderItem);
+
+      _notificationItems.add(orderItem);
     }
+
     notifyListeners();
   }
 
   void resetOrder() {
     _orderPlaced = false;
     _orderItems.clear();
-    _totalPrice = 0; //
+    _notificationItems.clear();
+    _totalPrice = 0;
     notifyListeners();
   }
 }

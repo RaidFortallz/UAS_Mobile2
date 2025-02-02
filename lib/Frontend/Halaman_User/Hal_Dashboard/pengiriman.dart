@@ -4,7 +4,7 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_mobile2/Backend/Provider/cart_provider.dart';
-import 'package:uas_mobile2/Frontend/Hal_Dashboard/Maps/lacak_pesanan.dart';
+import 'package:uas_mobile2/Frontend/Halaman_User/Hal_Dashboard/Maps/lacak_pesanan.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
@@ -34,16 +34,25 @@ class _PengirimanFragmentState extends State<PengirimanFragment> {
           buildHeader(),
           const Gap(18),
           if (cartProvider.orderItems.isEmpty) ...[
-            const Gap(270),
-            const Center(
-              child: Text(
-                'Belum ada pengiriman.',
-                style: TextStyle(
-                  fontFamily: "poppinsregular",
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: warnaKopi,
-                ),
+            const Gap(180),
+            Center(
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/image/bike.png',
+                    height: 150,
+                    width: 150,
+                    color: warnaKopi2,
+                  ),
+                  const Text(
+                    'Belum ada pengiriman.',
+                    style: TextStyle(
+                      fontFamily: "poppinsregular",
+                      fontSize: 16,
+                      color: warnaKopi2,
+                    ),
+                  ),
+                ],
               ),
             ),
           ] else ...[
@@ -84,6 +93,7 @@ class _PengirimanFragmentState extends State<PengirimanFragment> {
       children: orderItems.map((item) {
         final coffee = item['coffee'] as Coffees;
         final quantity = item['quantity'] as int;
+        final size = item['size'] ?? 'Default';
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,12 +117,13 @@ class _PengirimanFragmentState extends State<PengirimanFragment> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: CachedNetworkImage(
-                          imageUrl: coffee.image,
-                          height: 60,
-                          width: 60,
-                          fit: BoxFit.cover,
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
-                          ),
+                      imageUrl: coffee.image,
+                      height: 60,
+                      width: 60,
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
                   ),
                   const Gap(16),
                   Expanded(
@@ -130,6 +141,14 @@ class _PengirimanFragmentState extends State<PengirimanFragment> {
                         ),
                         Text(
                           'Jumlah: $quantity',
+                          style: const TextStyle(
+                            fontFamily: "poppinsregular",
+                            fontSize: 12,
+                            color: warnaAbu,
+                          ),
+                        ),
+                        Text(
+                          'Ukuran: $size',
                           style: const TextStyle(
                             fontFamily: "poppinsregular",
                             fontSize: 12,

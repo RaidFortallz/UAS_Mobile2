@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:uas_mobile2/Frontend/Sidebar/edit_profile.dart';
+import 'package:uas_mobile2/Frontend/Halaman_User/Sidebar/edit_profile.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 

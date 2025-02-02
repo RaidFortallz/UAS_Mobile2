@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
-import 'package:uas_mobile2/Frontend/PopUp_Dialog/awesome_dialog.dart';
+import 'package:uas_mobile2/Frontend/Halaman_User/PopUp_Dialog/awesome_dialog.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class Login extends StatefulWidget {
@@ -51,15 +51,34 @@ class _LoginState extends State<Login> {
 
       await authService.loginWithEmail(email: email, password: password);
 
-      if (mounted) {
-        CustomDialog.showDialog(
+      final adminData = await authService.getAdminUser();
+      print("Admin Data: $adminData");
+      if (adminData != null && adminData['is_admin'] == true) {
+        // Arahkan ke dashboard admin
+        if (mounted) {
+          CustomDialog.showDialog(
+            context: context,
+            dialogType: DialogType.success,
+            title: "Sukses",
+            desc: "Login Berhasil sebagai Admin",
+            btnOkOnPress: () {
+              Navigator.pushReplacementNamed(context, '/dashboard_admin');
+            },
+          );
+        }
+      } else {
+        // Arahkan ke dashboard pengguna biasa
+        if (mounted) {
+          CustomDialog.showDialog(
             context: context,
             dialogType: DialogType.success,
             title: "Sukses",
             desc: "Login Berhasil",
             btnOkOnPress: () {
               Navigator.pushReplacementNamed(context, '/dashboard');
-            });
+            },
+          );
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -67,7 +86,7 @@ class _LoginState extends State<Login> {
           context: context,
           dialogType: DialogType.error,
           title: "Gagal",
-          desc: "Username Belum Terdaftar",
+          desc: "Username atau Password Salah",
         );
       }
     }

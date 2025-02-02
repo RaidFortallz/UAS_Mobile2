@@ -33,6 +33,31 @@ class CoffeeService with ChangeNotifier {
     }
   }
 
+  // Mengambil kopi berdasarkan kategori
+  Future<void> fetchCoffeeByCategory(String category) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      if (category == "All Coffee") {
+        await fetchCoffees();
+      } else {
+        final response = await supabase
+        .from('coffees')
+        .select()
+        .eq('category', category);
+
+        _coffees = response.map((item) => Coffees.fromJson(item)).toList();
+      }
+    } catch (e) {
+      _errorMessage = 'Error saat mengambil data by category: $e';
+      print(_errorMessage);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   // Mengonversi objek Coffee ke dalam Map
   Map<String, dynamic> coffeeToMap(Coffees coffee) {
     return coffee.toJson();

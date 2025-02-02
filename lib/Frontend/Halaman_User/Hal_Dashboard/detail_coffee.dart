@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:uas_mobile2/Backend/Provider/cart_provider.dart';
 import 'package:uas_mobile2/Backend/Provider/favorite_provider.dart';
-import 'package:uas_mobile2/Frontend/PopUp_Dialog/awesome_dialog.dart';
+import 'package:uas_mobile2/Frontend/Halaman_User/PopUp_Dialog/awesome_dialog.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
@@ -77,9 +77,7 @@ class _DetailCoffeeState extends State<DetailCoffee> {
       children: [
         IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const ImageIcon(
-            AssetImage('assets/image/ic_arrow_left.png'),
-          ),
+          icon: const Icon(Icons.arrow_back_ios, color: warnaKopi2,),
         ),
         const Text(
           'Detail',

@@ -2,7 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
-import 'package:uas_mobile2/Frontend/PopUp_Dialog/awesome_dialog.dart';
+import 'package:uas_mobile2/Frontend/Halaman_User/PopUp_Dialog/awesome_dialog.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class Register extends StatefulWidget {

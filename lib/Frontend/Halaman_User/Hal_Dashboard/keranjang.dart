@@ -1,14 +1,17 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_mobile2/Backend/Provider/cart_provider.dart';
+import 'package:uas_mobile2/Backend/Provider/saldo_provider.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
-import 'package:uas_mobile2/Frontend/Hal_Dashboard/Alamat/edit_alamat.dart';
+import 'package:uas_mobile2/Frontend/Halaman_User/Hal_Dashboard/Alamat/edit_alamat.dart';
+import 'package:uas_mobile2/Frontend/Halaman_User/Hal_Dashboard/Saldo/isi_saldo.dart';
 
-import 'package:uas_mobile2/Frontend/PopUp_Dialog/awesome_dialog.dart';
+import 'package:uas_mobile2/Frontend/Halaman_User/PopUp_Dialog/awesome_dialog.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
@@ -30,6 +33,28 @@ class _KeranjangState extends State<Keranjang> {
   void initState() {
     super.initState();
     _fetchUserAddress();
+    _fetchUserSaldo();
+  }
+
+  void _fetchUserSaldo() async {
+    final supabaseAuthService =
+        Provider.of<SupabaseAuthService>(context, listen: false);
+    final userId = supabaseAuthService.getCurrentUser()?.id;
+
+    if (userId != null) {
+      Provider.of<SaldoProvider>(context, listen: false).fetchSaldo(userId);
+    }
+  }
+
+  void _updateSaldo(int newSaldo) async {
+    final supabaseAuthService =
+        Provider.of<SupabaseAuthService>(context, listen: false);
+    final userId = supabaseAuthService.getCurrentUser()?.id;
+
+    if (userId != null) {
+      Provider.of<SaldoProvider>(context, listen: false)
+          .updateSaldo(userId, newSaldo);
+    }
   }
 
   void _fetchUserAddress() async {
@@ -80,16 +105,25 @@ class _KeranjangState extends State<Keranjang> {
               buildHeader(),
               const Gap(24),
               if (cartItems.isEmpty) ...[
-                const Gap(270),
-                const Center(
-                  child: Text(
-                    'Keranjang mu kosong',
-                    style: TextStyle(
-                      fontFamily: "poppinsregular",
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: warnaKopi2,
-                    ),
+                const Gap(180),
+                Center(
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'assets/image/ic_bag_border.png',
+                        height: 150,
+                        width: 150,
+                        color: warnaKopi2,
+                      ),
+                      const Text(
+                        'Keranjang mu kosong',
+                        style: TextStyle(
+                          fontFamily: "poppinsregular",
+                          fontSize: 20,
+                          color: warnaKopi2,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ] else ...[
@@ -106,10 +140,11 @@ class _KeranjangState extends State<Keranjang> {
       ),
       bottomNavigationBar: Consumer<CartProvider>(
         builder: (context, cartProvider, child) {
+          final saldo = Provider.of<SaldoProvider>(context).saldo;
           if (cartProvider.cartItems.isEmpty) {
             return const SizedBox.shrink();
           }
-          return buildOrder(cartProvider);
+          return buildOrder(cartProvider, saldo);
         },
       ),
     );
@@ -120,11 +155,11 @@ class _KeranjangState extends State<Keranjang> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const ImageIcon(
-            AssetImage('assets/image/ic_arrow_left.png'),
-          ),
-        ),
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: warnaKopi2,
+            )),
         const Expanded(
           child: Align(
             alignment: Alignment.center,
@@ -155,8 +190,8 @@ class _KeranjangState extends State<Keranjang> {
               fontWeight: FontWeight.w600,
               color: warnaKopi),
         ),
-        const Gap(6),
-         Text(
+        const Gap(8),
+        Text(
           city.isNotEmpty ? city : 'Kota: Belum diisi.',
           style: const TextStyle(
               fontFamily: "poppinsregular",
@@ -164,30 +199,25 @@ class _KeranjangState extends State<Keranjang> {
               fontWeight: FontWeight.w600,
               color: warnaKopi),
         ),
-        const Gap(4),
-         Text(
+        const Gap(6),
+        Text(
           address.isNotEmpty ? address : 'Alamat: Belum diisi.',
           style: const TextStyle(
-              fontFamily: "poppinsregular",
-              fontSize: 12,
-              
-              color: warnaKopi2),
+              fontFamily: "poppinsregular", fontSize: 12, color: warnaKopi2),
         ),
-        const Gap(4),
-         Text(
+        const Gap(6),
+        Text(
           phoneNumber.isNotEmpty ? 'No Hp: $phoneNumber' : 'No Hp: Belum diisi',
           style: const TextStyle(
-              fontFamily: "poppinsregular",
-              fontSize: 12,
-              
-              color: warnaKopi2),
+              fontFamily: "poppinsregular", fontSize: 12, color: warnaKopi2),
         ),
         const Gap(12),
         Row(
           children: [
             Bounceable(
               onTap: () {
-                showEditAddressDialog(context, updateAddress, city, address, phoneNumber);
+                showEditAddressDialog(
+                    context, updateAddress, city, address, phoneNumber);
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -248,11 +278,13 @@ class _KeranjangState extends State<Keranjang> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
-                    coffee.image,
+                  child: CachedNetworkImage(
+                    imageUrl: coffee.image,
                     width: 55,
                     height: 55,
                     fit: BoxFit.cover,
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error, color: Colors.red),
                   ),
                 ),
                 const Gap(16),
@@ -493,61 +525,143 @@ class _KeranjangState extends State<Keranjang> {
     );
   }
 
-  Widget buildOrder(CartProvider cartProvider) {
+  Widget buildOrder(CartProvider cartProvider, int saldo) {
+    final formatter =
+        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
+    final formattedSaldo = formatter.format(saldo);
+
+    int totalPrice = 0;
+    for (var item in cartProvider.cartItems) {
+      final price = item['price'] as int;
+      final quantity = (item['quantity'] ?? 1) as int;
+      totalPrice += price * quantity;
+    }
+
+    final int totalWithShipping = totalPrice + shippingCost;
+
+    print("Saldo: $saldo, Total dengan pengiriman: $totalWithShipping");
+
+    bool isSaldoEnough = saldo >= totalWithShipping;
+
     return Bounceable(
-      onTap: () {
+      onTap: isSaldoEnough
+          ? () {
+              cartProvider.placeOrder();
 
-        cartProvider.placeOrder();
+              final newSaldo = saldo - totalWithShipping;
+              _updateSaldo(newSaldo);
 
-        CustomDialog.showDialog(
-          context: context,
-          dialogType: DialogType.success,
-          animType: AnimType.bottomSlide,
-          title: "Sukses",
-          desc: "Berhasil Pesan Coffee",
-          btnOkOnPress: () {
-            cartProvider.clearCart();
-          },
-        );
-      },
+              setState(() {
+                saldo -= totalWithShipping;
+              });
+
+              CustomDialog.showDialog(
+                context: context,
+                dialogType: DialogType.success,
+                animType: AnimType.bottomSlide,
+                title: "Sukses",
+                desc: "Berhasil Pesan Coffee",
+                btnOkOnPress: () {
+                  cartProvider.clearCart();
+                  _fetchUserSaldo();
+                },
+              );
+            }
+          : null,
       child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
           ),
-          child: Container(
-            height: 48,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              color: warnaKopi2,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.asset(
-                  'assets/image/bike.png',
-                  height: 24,
-                  width: 24,
-                  color: Colors.white,
+                const Icon(
+                  Icons.account_balance_wallet,
+                  color: warnaKopi,
                 ),
-                const SizedBox(
-                  width: 8,
+                const SizedBox(width: 8),
+                Text(
+                  'Saldo Anda: $formattedSaldo',
+                  style: const TextStyle(
+                    fontFamily: "poppinsregular",
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: warnaKopi2,
+                  ),
                 ),
-                const Text(
-                  'Order',
-                  style: TextStyle(
-                      fontFamily: "poppinsregular",
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white),
+                const Spacer(),
+                PopupMenuButton<String>(
+                  onSelected: (value) {
+                    if (value == 'isiSaldo') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const IsiSaldoPage(),
+                        ),
+                      );
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem<String>(
+                      value: 'isiSaldo',
+                      child: Text(
+                        'Isi Saldo',
+                        style: TextStyle(
+                          fontFamily: "poppinsregular",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: warnaKopi2,
+                        ),
+                      ),
+                    ),
+                  ],
+                  icon: const Icon(Icons.arrow_drop_up, color: warnaKopi),
                 ),
               ],
             ),
-          )),
+            const Gap(12),
+            // Tombol Pesan
+            Container(
+              height: 48,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: isSaldoEnough ? warnaKopi2 : Colors.grey,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/image/bike.png',
+                    height: 24,
+                    width: 24,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    isSaldoEnough ? 'Pesan' : 'Saldo Anda Tidak Cukup!',
+                    style: const TextStyle(
+                      fontFamily: "poppinsregular",
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

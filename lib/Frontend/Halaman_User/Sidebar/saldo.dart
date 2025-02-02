@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uas_mobile2/Backend/Provider/saldo_provider.dart';
+import 'package:uas_mobile2/Frontend/Halaman_User/Hal_Dashboard/Saldo/isi_saldo.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class SaldoPage extends StatefulWidget {
@@ -9,12 +14,27 @@ class SaldoPage extends StatefulWidget {
 }
 
 class _SaldoPageState extends State<SaldoPage> {
-  
-  double saldo = 0.0;
+  @override
+  void initState() {
+    super.initState();
+    _loadSaldo();
+  }
 
+  Future<void> _loadSaldo() async {
+    final userId = Supabase.instance.client.auth.currentUser!.id;
+    await Provider.of<SaldoProvider>(context, listen: false).fetchSaldo(userId);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final saldo = Provider.of<SaldoProvider>(context).saldo;
+
+    final formattedSaldo = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    ).format(saldo);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -45,6 +65,7 @@ class _SaldoPageState extends State<SaldoPage> {
                     Text(
                       'Saldo Anda',
                       style: TextStyle(
+                        fontFamily: "poppinsregular",
                         fontSize: 30,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 1.5,
@@ -60,10 +81,11 @@ class _SaldoPageState extends State<SaldoPage> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Rp ${saldo.toStringAsFixed(0)}',
+                      formattedSaldo,
                       style: TextStyle(
-                        fontSize: 42,
-                        fontWeight: FontWeight.bold,
+                        fontFamily: "poppinsregular",
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
                         color: warnaKopi3,
                         letterSpacing: 1.5,
                         shadows: [
@@ -81,7 +103,12 @@ class _SaldoPageState extends State<SaldoPage> {
               const SizedBox(height: 40),
               // Tombol Top Up
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const IsiSaldoPage()));
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
@@ -94,6 +121,7 @@ class _SaldoPageState extends State<SaldoPage> {
                 child: const Text(
                   'Top Up',
                   style: TextStyle(
+                    fontFamily: "poppinsregular",
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: warnaKopi3,
@@ -102,24 +130,6 @@ class _SaldoPageState extends State<SaldoPage> {
               ),
               const SizedBox(height: 20),
 
-              GestureDetector(
-                onTap: () {
-                  // Riwayat transaksi
-                },
-                child: const Chip(
-                  backgroundColor: warnaKopi2,
-                  label: Text(
-                    'Riwayat Transaksi',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  avatar: Icon(
-                    Icons.history,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 40),
               // Tombol Kembali
               ElevatedButton(
                 onPressed: () {
@@ -137,6 +147,7 @@ class _SaldoPageState extends State<SaldoPage> {
                 child: const Text(
                   'Kembali',
                   style: TextStyle(
+                    fontFamily: "poppinsregular",
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: warnaKopi3,

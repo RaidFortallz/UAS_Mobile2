@@ -19,7 +19,8 @@ class _TrackOrdersMapState extends State<TrackOrdersMap> {
   String address = '';
   String phoneNumber = '';
   LatLng _markerPosition = const LatLng(-6.9344, 107.6071);
-  LatLng _deliveryPosition = const LatLng(-6.9344, 107.6071);
+
+  final MapController _mapController = MapController();
 
   @override
   void initState() {
@@ -66,12 +67,10 @@ class _TrackOrdersMapState extends State<TrackOrdersMap> {
             setState(() {
               _markerPosition = LatLng(latitude, longitude);
             });
+
+            _mapController.move(_markerPosition, 14.0);
           }
         }
-
-        setState(() {
-          _deliveryPosition = _markerPosition;
-        });
       } catch (e) {
         setState(() {
           address = 'Gagal memuat';
@@ -95,6 +94,7 @@ class _TrackOrdersMapState extends State<TrackOrdersMap> {
 
   Widget buildMaps() {
     return FlutterMap(
+      mapController: _mapController,
       options: MapOptions(
         initialCenter: _markerPosition,
         initialZoom: 11,
@@ -123,7 +123,7 @@ class _TrackOrdersMapState extends State<TrackOrdersMap> {
             ),
           ),
           Marker(
-            point: _deliveryPosition,
+            point: const LatLng(-6.9344, 107.6071),
             width: 60,
             height: 60,
             child: Image.asset(
@@ -132,6 +132,15 @@ class _TrackOrdersMapState extends State<TrackOrdersMap> {
               height: 50,
             ),
           ),  
+        ]),
+        PolylineLayer(polylines: [
+          Polyline(points: [
+             const LatLng(-6.9344, 107.6071),
+             _markerPosition,
+          ],
+          strokeWidth: 4.0,
+          color: Colors.blue,
+          )
         ])
       ],
     );

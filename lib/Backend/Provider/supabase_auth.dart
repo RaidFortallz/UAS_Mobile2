@@ -78,6 +78,35 @@ class SupabaseAuthService with ChangeNotifier {
     }
   }
 
+  // Fungsi untuk mencari user dengan username admin
+  Future<Map<String, dynamic>?> getAdminUser() async {
+    try {
+      final user = _supabase.auth.currentUser;
+      if (user == null) {
+        return null;
+      }
+      final response = await _supabase
+          .from('profile_users')
+          .select('id, username, email, is_admin')
+          .eq('id', user.id)
+          .maybeSingle();
+
+      if (response == null) {
+        return null;
+      }
+
+      return {
+        'id': response['id'],
+        'email': response['email'],
+        'username': response['username'],
+        'is_admin': response['is_admin'],
+      };
+    } catch (e) {
+      log("Kesalahan saat mencari admin: $e", name: "SupabaseAuthService");
+      throw Exception("Kesalahan saat mencari admin: $e");
+    }
+  }
+
   // Fungsi untuk mendapatkan email berdasarkan username dari tabel profile_users
   Future<String?> getEmailByUsername(String username) async {
     try {
@@ -289,6 +318,39 @@ class SupabaseAuthService with ChangeNotifier {
         'address': '',
         'phoneNumber': '',
       };
+    }
+  }
+
+  //Fungsi untuk mengisi saldo
+  Future<void> isiSaldo({required int jumlahSaldo}) async {
+    try {
+      final user = _supabase.auth.currentUser;
+      if (user == null) {
+        throw Exception("Pengguna tidak ditemukan, harap login kembali.");
+      }
+
+      final userId = user.id;
+
+      final response = await _supabase
+          .from('profile_users')
+          .select('saldo')
+          .eq('id', userId)
+          .maybeSingle();
+
+      int saldoLama = (response != null && response['saldo'] != null)
+          ? (response['saldo'] as num).toInt()
+          : 0;
+
+      int saldoBaru = saldoLama + jumlahSaldo;
+
+      await _supabase
+          .from('profile_users')
+          .update({'saldo': saldoBaru}).eq('id', userId);
+
+      log("Saldo berhasil diperbarui: $saldoBaru", name: "SupabaseAuthService");
+    } catch (e) {
+      log("Kesalahan saat mengisi saldo $e", name: "SupabaseAuthService");
+      throw Exception("Kesalahan saat mengisi saldo: $e");
     }
   }
 

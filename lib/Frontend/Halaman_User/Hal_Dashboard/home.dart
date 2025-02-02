@@ -8,9 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:uas_mobile2/Backend/Provider/cart_provider.dart';
 import 'package:uas_mobile2/Backend/Provider/coffee_service.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
-import 'package:uas_mobile2/Frontend/Hal_Dashboard/keranjang.dart';
-import 'package:uas_mobile2/Frontend/Hal_Pencarian/search_coffee.dart';
-import 'package:uas_mobile2/Frontend/Sidebar/sidebar.dart';
+import 'package:uas_mobile2/Frontend/Halaman_User/Hal_Dashboard/keranjang.dart';
+import 'package:uas_mobile2/Frontend/Halaman_User/Hal_Pencarian/search_coffee.dart';
+import 'package:uas_mobile2/Frontend/Halaman_User/Sidebar/sidebar.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 import 'package:badges/badges.dart' as badges;
@@ -330,8 +330,9 @@ class _HomeFragmentState extends State<HomeFragment> {
     final categories = [
       'All Coffee',
       'Machiato',
+      'Cappuccino',
+      'Espresso',
       'Latte',
-      'Americano',
     ];
 
     return SizedBox(
@@ -345,8 +346,13 @@ class _HomeFragmentState extends State<HomeFragment> {
           bool isActive = categorySelected == category;
           return Bounceable(
             onTap: () {
-              categorySelected = category;
-              setState(() {});
+              setState(() {
+                categorySelected = category;
+              });
+
+              final coffeeService =
+                  Provider.of<CoffeeService>(context, listen: false);
+              coffeeService.fetchCoffeeByCategory(category);
             },
             child: Container(
               margin: EdgeInsets.only(
@@ -376,13 +382,24 @@ class _HomeFragmentState extends State<HomeFragment> {
 
   Widget buildGridCoffee(List<Coffees> coffees, bool isLoading) {
     if (isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
+      return const Padding(
+        padding: EdgeInsets.only(top: 80),
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
       );
     }
 
     if (coffees.isEmpty) {
-      return const Center(child: Text('Kopi tidak tersedia'));
+      return const Padding(
+        padding: EdgeInsets.only(top: 80),
+        child: Center(
+            child: 
+            Text(
+          'Kopi tidak tersedia.',
+          style: TextStyle(fontFamily: "poppinsregular", color: warnaKopi, fontSize: 18),
+        )),
+      );
     }
 
     return Expanded(

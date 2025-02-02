@@ -39,8 +39,7 @@ class FavoriteFragment extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: "poppinsregular",
                       fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: warnaKopi,
+                      color: warnaKopi2,
                     ),
                   ),
                 ],
@@ -56,7 +55,7 @@ class FavoriteFragment extends StatelessWidget {
 
   Widget buildHeader() {
     return const Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,      
       children: [
         Text(
           'Favorite',
@@ -113,11 +112,12 @@ class FavoriteFragment extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: CachedNetworkImage(
-                          imageUrl: coffee.image,
-                          height: 128,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                            imageUrl: coffee.image,
+                            height: 128,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
                           ),
                         ),
                         Align(

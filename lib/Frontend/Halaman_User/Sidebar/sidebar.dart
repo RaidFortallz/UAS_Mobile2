@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
-import 'package:uas_mobile2/Frontend/Hal_Login&Register/login.dart';
-import 'package:uas_mobile2/Frontend/Sidebar/about.dart';
+import 'package:uas_mobile2/Frontend/Halaman_User/Hal_Login&Register/login.dart';
+import 'package:uas_mobile2/Frontend/Halaman_User/Sidebar/about.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
 class SidebarPage extends StatefulWidget {

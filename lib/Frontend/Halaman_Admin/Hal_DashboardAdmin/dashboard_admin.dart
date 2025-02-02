@@ -1,48 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:uas_mobile2/Frontend/Hal_Dashboard/favorite.dart';
-import 'package:uas_mobile2/Frontend/Hal_Dashboard/home.dart';
 import 'package:gap/gap.dart';
-import 'package:uas_mobile2/Frontend/Hal_Dashboard/notifikasi.dart';
-import 'package:uas_mobile2/Frontend/Hal_Dashboard/pengiriman.dart';
+import 'package:uas_mobile2/Frontend/Halaman_Admin/Hal_DashboardAdmin/home_admin.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
-class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key});
+class DashboardAdminPage extends StatefulWidget {
+  const DashboardAdminPage({super.key});
 
   @override
-  State<DashboardPage> createState() => _DashboardPageState();
+  State<DashboardAdminPage> createState() => _DashboardAdminPageState();
 }
 
-class _DashboardPageState extends State<DashboardPage> {
+class _DashboardAdminPageState extends State<DashboardAdminPage> {
   int indexMenu = 0;
-  
 
   @override
   Widget build(BuildContext context) {
-    
-
     final menu = [
-    {
-      'icon': 'assets/image/ic_home_border.png',
-      'icon_active': 'assets/image/ic_home_filled.png',
-      'fragment': const HomeFragment()
-    },
-    {
-      'icon': 'assets/image/ic_heart_border.png',
-      'icon_active': 'assets/image/ic_heart_border.png',
-      'fragment': const FavoriteFragment()
-    },
-    {
-      'icon': 'assets/image/bike.png',
-      'icon_active': 'assets/image/bike.png',
-      'fragment': const PengirimanFragment()
-    },
-    {
-      'icon': 'assets/image/ic_notification_border.png',
-      'icon_active': 'assets/image/ic_notification_border.png',
-      'fragment':  const NotifikasiFragment()
-    },
-  ];
+      {
+        'icon': 'assets/image/ic_home_border.png',
+        'icon_active': 'assets/image/ic_home_filled.png',
+        'fragment': const HomeAdmin()
+      },
+    ];
 
     return Scaffold(
       body: menu[indexMenu]['fragment'] as Widget,
