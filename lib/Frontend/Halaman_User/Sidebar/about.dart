@@ -18,7 +18,7 @@ class AboutPage extends StatelessWidget {
                   Icon(
                     Icons.coffee,
                     size: 80,
-                    color: warnaKopi3,
+                    color: warnaKopi2,
                   ),
                   SizedBox(height: 16),
                   Text(
@@ -26,14 +26,14 @@ class AboutPage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: warnaKopi3,
+                      color: warnaKopi2,
                     ),
                   ),
                   SizedBox(height: 8),
                 ],
               ),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 10),
 
             // Deskripsi Kedai Kopi
             Card(
@@ -76,7 +76,7 @@ class AboutPage extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 10),
 
             // Informasi Kelompok
             Card(
@@ -124,7 +124,7 @@ class AboutPage extends StatelessWidget {
                     ),
                     SizedBox(height: 5),
                     Text(
-                      '4. Naufal Pratista Sugandi_22552011077',
+                      '4. Naufal Pratista Sugandhi_22552011077',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.black54,
@@ -135,7 +135,7 @@ class AboutPage extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 10),
 
             // Informasi Kontak
             Card(
@@ -170,7 +170,7 @@ class AboutPage extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 10),
 
             // Tombol kembali
             ElevatedButton(
@@ -193,7 +193,7 @@ class AboutPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: warnaKopi3,
+                  color: warnaKopi2,
                 ),
               ),
             ),

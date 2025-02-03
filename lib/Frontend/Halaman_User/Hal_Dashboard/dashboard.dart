@@ -15,34 +15,31 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   int indexMenu = 0;
-  
 
   @override
   Widget build(BuildContext context) {
-    
-
     final menu = [
-    {
-      'icon': 'assets/image/ic_home_border.png',
-      'icon_active': 'assets/image/ic_home_filled.png',
-      'fragment': const HomeFragment()
-    },
-    {
-      'icon': 'assets/image/ic_heart_border.png',
-      'icon_active': 'assets/image/ic_heart_active.png',
-      'fragment': const FavoriteFragment()
-    },
-    {
-      'icon': 'assets/image/bike.png',
-      'icon_active': 'assets/image/bike.png',
-      'fragment': const PengirimanFragment()
-    },
-    {
-      'icon': 'assets/image/ic_notification_border.png',
-      'icon_active': 'assets/image/ic_notification_active.png',
-      'fragment':  const NotifikasiFragment()
-    },
-  ];
+      {
+        'icon': 'assets/image/ic_home_border.png',
+        'icon_active': 'assets/image/ic_home_filled.png',
+        'fragment': const HomeFragment()
+      },
+      {
+        'icon': 'assets/image/ic_heart_border.png',
+        'icon_active': 'assets/image/ic_heart_active.png',
+        'fragment': const FavoriteFragment()
+      },
+      {
+        'icon': 'assets/image/bike.png',
+        'icon_active': 'assets/image/bike.png',
+        'fragment': const PengirimanFragment()
+      },
+      {
+        'icon': 'assets/image/ic_notification_border.png',
+        'icon_active': 'assets/image/ic_notification_active.png',
+        'fragment': const NotifikasiFragment()
+      },
+    ];
 
     return Scaffold(
       body: menu[indexMenu]['fragment'] as Widget,

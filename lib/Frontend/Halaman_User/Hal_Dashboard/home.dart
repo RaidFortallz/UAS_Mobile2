@@ -394,10 +394,10 @@ class _HomeFragmentState extends State<HomeFragment> {
       return const Padding(
         padding: EdgeInsets.only(top: 80),
         child: Center(
-            child: 
-            Text(
+            child: Text(
           'Kopi tidak tersedia.',
-          style: TextStyle(fontFamily: "poppinsregular", color: warnaKopi, fontSize: 18),
+          style: TextStyle(
+              fontFamily: "poppinsregular", color: warnaKopi, fontSize: 18),
         )),
       );
     }

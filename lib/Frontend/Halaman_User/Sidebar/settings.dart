@@ -27,7 +27,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   Icon(
                     Icons.settings,
                     size: 80,
-                    color: warnaKopi3,
+                    color: warnaKopi2,
                   ),
                   SizedBox(height: 16),
                   Text(
@@ -35,7 +35,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: warnaKopi3,
+                      color: warnaKopi2,
                     ),
                   ),
                 ],
@@ -92,7 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
-                  side: const BorderSide(color: warnaKopi3),
+                  side: const BorderSide(color: warnaKopi2),
                 ),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 80,
@@ -104,7 +104,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: warnaKopi3,
+                  color: warnaKopi2,
                 ),
               ),
             ),
@@ -151,7 +151,7 @@ class _SettingsPageState extends State<SettingsPage> {
             Switch(
               value: value,
               onChanged: onChanged,
-              activeColor: warnaKopi3,
+              activeColor: warnaKopi2,
             ),
           ],
         ),

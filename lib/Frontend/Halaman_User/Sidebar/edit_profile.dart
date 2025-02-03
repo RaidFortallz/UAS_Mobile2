@@ -53,9 +53,51 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Profil'),
-        backgroundColor: warnaKopi2,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(50.0),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [warnaKopi, warnaKopi2],
+            ),
+          ),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 23.0),
+                child: IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
+              ),
+              const Expanded(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 23.0),
+                    child: Text(
+                      'Edit Profil',
+                      style: TextStyle(
+                        fontFamily: "poppinsregular",
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 48),
+            ],
+          ),
+        ),
       ),
       body: Form(
         key: _formKey,
@@ -69,31 +111,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Text(
-                        "Email: $_newEmail",
-                        style: const TextStyle(
-                          fontFamily: "poppinsregular",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: warnaKopi2,
-                        ),
-                      ),
-                    ),
+                    buildTextField("Email", _newEmail ?? '',
+                        (value) => _newEmail = value, true),
                     const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Text(
-                        "Username: $_newUsername",
-                        style: const TextStyle(
-                          fontFamily: "poppinsregular",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: warnaKopi2,
-                        ),
-                      ),
-                    ),
+                    buildTextField("Username", _newUsername ?? '',
+                        (value) => _newUsername = value),
                     const SizedBox(height: 20),
                     buildTextField("Nomor HP", _newPhone ?? '',
                         (value) => _newPhone = value),
@@ -219,29 +241,50 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget buildTextField(
       String label, String initialValue, Function(String?) onSaved,
       [bool isEmail = false, bool isPassword = false]) {
-    return TextFormField(
-      initialValue: initialValue,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(
-          color: warnaKopi,
-          fontFamily: "poppinsregular",
-          fontSize: 14,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: warnaKopi2, width: 2),
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-      ),
-      obscureText: isPassword,
-      onSaved: onSaved,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return '$label tidak boleh kosong'; // Validasi untuk memastikan kolom tidak kosong
-        }
-        return null;
+    bool isPasswordVisible = false;
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return TextFormField(
+          initialValue: initialValue,
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: const TextStyle(
+              color: warnaKopi,
+              fontFamily: "poppinsregular",
+              fontSize: 14,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: warnaKopi2, width: 2),
+            ),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: warnaKopi2,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isPasswordVisible = !isPasswordVisible;
+                      });
+                    },
+                  )
+                : null,
+          ),
+          obscureText: isPassword && !isPasswordVisible,
+          onSaved: onSaved,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return '$label tidak boleh kosong';
+            }
+            return null;
+          },
+        );
       },
     );
   }

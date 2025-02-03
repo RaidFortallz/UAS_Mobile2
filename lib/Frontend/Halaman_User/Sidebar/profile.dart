@@ -93,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
 
     if (result == true) {
-      _loadProfile(); // Memuat ulang profil jika ada perubahan
+      _loadProfile();
     }
   }
 
@@ -115,15 +115,16 @@ class _ProfilePageState extends State<ProfilePage> {
                         Icon(
                           Icons.person,
                           size: 80,
-                          color: warnaKopi3,
+                          color: warnaKopi2,
                         ),
                         SizedBox(height: 16),
                         Text(
                           'Profile Saya',
                           style: TextStyle(
+                            fontFamily: "poppinsregular",
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: warnaKopi3,
+                            color: warnaKopi2,
                           ),
                         ),
                         SizedBox(height: 8),
@@ -166,7 +167,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: ElevatedButton(
                       onPressed: _navigateToEditProfile,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: warnaKopi3,
+                        backgroundColor: warnaKopi2,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -178,6 +179,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: const Text(
                         'Edit Profil',
                         style: TextStyle(
+                          fontFamily: "poppinsregular",
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -199,7 +201,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
-                          side: const BorderSide(color: warnaKopi3),
+                          side: const BorderSide(color: warnaKopi2),
                         ),
                         padding: const EdgeInsets.symmetric(
                           horizontal: 80,
@@ -209,9 +211,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: const Text(
                         'Kembali',
                         style: TextStyle(
+                          fontFamily: "poppinsregular",
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: warnaKopi3,
+                          color: warnaKopi2,
                         ),
                       ),
                     ),
@@ -255,6 +258,7 @@ class _ProfilePageState extends State<ProfilePage> {
           Text(
             title,
             style: const TextStyle(
+              fontFamily: "poppinsregular",
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: Colors.black87,
@@ -263,6 +267,7 @@ class _ProfilePageState extends State<ProfilePage> {
           Text(
             value.isEmpty ? 'Tidak ada data' : value,
             style: const TextStyle(
+              fontFamily: "poppinsregular",
               fontSize: 14,
               color: Colors.black54,
             ),

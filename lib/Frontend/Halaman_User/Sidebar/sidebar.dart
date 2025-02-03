@@ -70,6 +70,7 @@ class _SidebarPageState extends State<SidebarPage> {
                 Text(
                   username,
                   style: const TextStyle(
+                    fontFamily: "poppinsregular",
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -78,6 +79,7 @@ class _SidebarPageState extends State<SidebarPage> {
                 Text(
                   email,
                   style: const TextStyle(
+                    fontFamily: "poppinsregular",
                     fontSize: 14,
                     color: Colors.white70,
                   ),
@@ -169,6 +171,7 @@ class _SidebarPageState extends State<SidebarPage> {
       title: Text(
         title,
         style: const TextStyle(
+          fontFamily: "poppinsregular",
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: Colors.black87,

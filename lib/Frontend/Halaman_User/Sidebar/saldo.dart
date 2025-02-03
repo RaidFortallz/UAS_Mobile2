@@ -60,7 +60,7 @@ class _SaldoPageState extends State<SaldoPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Icon(Icons.account_balance_wallet,
-                        size: 100, color: warnaKopi3),
+                        size: 100, color: warnaKopi2),
                     const SizedBox(height: 20),
                     Text(
                       'Saldo Anda',
@@ -110,10 +110,10 @@ class _SaldoPageState extends State<SaldoPage> {
                           builder: (context) => const IsiSaldoPage()));
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
+                  backgroundColor: warnaKopi2,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
-                    side: const BorderSide(color: warnaKopi3),
+                    side: const BorderSide(color: warnaKopi2),
                   ),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
@@ -124,7 +124,7 @@ class _SaldoPageState extends State<SaldoPage> {
                     fontFamily: "poppinsregular",
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: warnaKopi3,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -139,7 +139,7 @@ class _SaldoPageState extends State<SaldoPage> {
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
-                    side: const BorderSide(color: warnaKopi3),
+                    side: const BorderSide(color: warnaKopi2),
                   ),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
@@ -150,7 +150,7 @@ class _SaldoPageState extends State<SaldoPage> {
                     fontFamily: "poppinsregular",
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: warnaKopi3,
+                    color: warnaKopi2,
                   ),
                 ),
               ),
