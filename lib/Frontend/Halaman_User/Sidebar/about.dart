@@ -78,6 +78,65 @@ class AboutPage extends StatelessWidget {
 
             const SizedBox(height: 40),
 
+            // Informasi Kelompok
+            Card(
+              elevation: 5,
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Anggota Kelompok Sukses',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      '1. Ageng Eko Widitya_2255011082',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      '2. Hikam Sirrul Arifin_22552011066',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      '3. M Dimas Daniswara Putra_22552011263',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      '4. Naufal Pratista Sugandi_22552011077',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 40),
+
             // Informasi Kontak
             Card(
               elevation: 5,
