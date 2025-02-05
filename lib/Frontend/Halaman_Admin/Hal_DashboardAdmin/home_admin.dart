@@ -3,6 +3,7 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 import 'package:uas_mobile2/Frontend/Halaman_Admin/Hak_Akses/add_coffee.dart';
+import 'package:uas_mobile2/Frontend/Halaman_Admin/Hak_Akses/delete_coffee.dart';
 import 'package:uas_mobile2/Frontend/Halaman_User/Hal_Login&Register/login.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 import 'package:provider/provider.dart';
@@ -122,13 +123,16 @@ class _HomeAdminState extends State<HomeAdmin> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const TambahKopiPage()));
+                          builder: (context) => const AddCoffeePage()));
                   break;
                 case 1:
                   // Navigasi update kopi
                   break;
                 case 2:
-                  // Navigasi hapus kopi
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const DeleteCoffeePage()));
                   break;
               }
             }

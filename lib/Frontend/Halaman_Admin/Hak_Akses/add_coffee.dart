@@ -7,14 +7,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uas_mobile2/Frontend/Halaman_User/PopUp_Dialog/awesome_dialog.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 
-class TambahKopiPage extends StatefulWidget {
-  const TambahKopiPage({super.key});
+class AddCoffeePage extends StatefulWidget {
+  const AddCoffeePage({super.key});
 
   @override
-  State<TambahKopiPage> createState() => _TambahKopiPageState();
+  State<AddCoffeePage> createState() => _AddCoffeePageState();
 }
 
-class _TambahKopiPageState extends State<TambahKopiPage> {
+class _AddCoffeePageState extends State<AddCoffeePage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
