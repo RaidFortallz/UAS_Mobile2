@@ -193,9 +193,13 @@ class _DeleteCoffeePageState extends State<DeleteCoffeePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        NumberFormat.currency(
-                                decimalDigits: 0, locale: 'id_ID', symbol: 'Rp')
-                            .format(coffee['price']),
+                        coffee['price'] != null
+                            ? NumberFormat.currency(
+                                    decimalDigits: 0,
+                                    locale: 'id_ID',
+                                    symbol: 'Rp')
+                                .format(coffee['price'])
+                            : '0',
                         style: const TextStyle(
                           fontFamily: "poppinsregular",
                           fontWeight: FontWeight.w600,
