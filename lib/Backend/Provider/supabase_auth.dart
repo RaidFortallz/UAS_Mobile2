@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseAuthService with ChangeNotifier {
@@ -9,6 +10,8 @@ class SupabaseAuthService with ChangeNotifier {
   // Status pengguna saat ini
   User? _user;
   User? get user => _user;
+
+  var logger = Logger();
 
   // Fungsi untuk register user
   Future<void> registerUser({
@@ -313,7 +316,7 @@ class SupabaseAuthService with ChangeNotifier {
         'phoneNumber': response['phone_number'] as String? ?? '',
       };
     } catch (error) {
-      print('Error mengambil alamat pengguna: $error');
+      logger.e('Error mengambil alamat pengguna: $error');
       return {
         'city': '',
         'address': '',
