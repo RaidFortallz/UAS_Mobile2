@@ -33,6 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   Text(
                     'Pengaturan Aplikasi',
                     style: TextStyle(
+                      fontFamily: "poppinsregular",
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: warnaKopi2,
@@ -102,6 +103,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: const Text(
                 'Kembali',
                 style: TextStyle(
+                  fontFamily: "poppinsregular",
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: warnaKopi2,
@@ -134,6 +136,7 @@ class _SettingsPageState extends State<SettingsPage> {
             Text(
               title,
               style: const TextStyle(
+                fontFamily: "poppinsregular",
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
@@ -143,6 +146,7 @@ class _SettingsPageState extends State<SettingsPage> {
             Text(
               description,
               style: const TextStyle(
+                fontFamily: "poppinsregular",
                 fontSize: 14,
                 color: Colors.black54,
               ),

@@ -10,7 +10,6 @@ import 'package:uas_mobile2/Backend/Provider/coffee_service.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 import 'package:uas_mobile2/Frontend/Halaman_User/Hal_Dashboard/keranjang.dart';
 import 'package:uas_mobile2/Frontend/Halaman_User/Hal_Pencarian/search_coffee.dart';
-import 'package:uas_mobile2/Frontend/Halaman_User/Sidebar/sidebar.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
 import 'package:badges/badges.dart' as badges;
@@ -76,7 +75,6 @@ class _HomeFragmentState extends State<HomeFragment> {
 
     return Scaffold(
       key: _scaffoldKey,
-      drawer: const SidebarPage(),
       body: ListView(
         padding: const EdgeInsets.all(0),
         children: [
@@ -129,14 +127,8 @@ class _HomeFragmentState extends State<HomeFragment> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            IconButton(
-              icon: const Icon(Icons.menu, color: warnaAbu),
-              onPressed: () {
-                _scaffoldKey.currentState?.openDrawer();
-              },
-            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [

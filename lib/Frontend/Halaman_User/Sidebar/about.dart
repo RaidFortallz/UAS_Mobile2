@@ -24,7 +24,8 @@ class AboutPage extends StatelessWidget {
                   Text(
                     'Tentang J-WIR COFFEE',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontFamily: "poppinsregular",
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: warnaKopi2,
                     ),
@@ -35,166 +36,101 @@ class AboutPage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // Deskripsi Kedai Kopi
-            Card(
-              elevation: 5,
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Selamat datang di J_WIR Coffee!',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'Di J_WIR COFFEE, kami percaya dalam menyajikan campuran kopi terbaik khas jawa untuk menciptakan pengalaman sempurna bagi pelanggan kami. Apakah Anda di sini untuk sekadar menikmati kopi cepat atau bersantai di sore hari, kami berjanji akan memberikan kualitas dan pelayanan terbaik setiap saat.',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black54,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'Kopi kami diperoleh dari produsen lokal terbaik, dan kami menawarkan berbagai macam minuman mulai dari espresso hingga latte yang lembut. Kunjungi kami dan nikmati kehangatan kopi yang lezat!',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ],
+            
+            _buildCard(
+              title: 'Selamat datang di J-WIR Coffee!',
+              content:
+                  'Di J-WIR COFFEE, kami percaya dalam menyajikan campuran kopi terbaik khas Jawa untuk menciptakan pengalaman sempurna bagi pelanggan kami. '
+                  'Apakah Anda di sini untuk sekadar menikmati kopi cepat atau bersantai di sore hari, kami berjanji akan memberikan kualitas dan pelayanan terbaik setiap saat.\n\n',
+            ),
+
+            
+            _buildCard(
+              title: 'Anggota Kelompok',
+              content: '''
+                1. Ageng Eko Widitya - 2255011082
+                2. Hikam Sirrul Arifin - 22552011066
+                3. M Dimas Daniswara Putra - 22552011263
+                4. Naufal Pratista Sugandhi - 22552011077
+              '''.split("\n").map((e) => e.trim()).join("\n"), 
+            ),
+
+            
+            _buildCard(
+              title: 'Hubungi Kami',
+              content: '''
+              Alamat: Jl. Terbaik No. 69, Bandung, Jawa Barat
+              Telepon: +62 877 654 7890
+              Email: J-wircoffee@gmail.com
+              '''.split("\n").map((e) => e.trim()).join("\n"), 
+            ),
+
+            const SizedBox(height: 20),
+
+            // Tombol Kembali
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: const BorderSide(color: warnaKopi3),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 80,
+                    vertical: 15,
+                  ),
+                ),
+                child: const Text(
+                  'Kembali',
+                  style: TextStyle(
+                    fontFamily: "poppinsregular",
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: warnaKopi2,
+                  ),
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
 
-            const SizedBox(height: 10),
-
-            // Informasi Kelompok
-            Card(
-              elevation: 5,
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Anggota Kelompok Sukses',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      '1. Ageng Eko Widitya_2255011082',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black54,
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      '2. Hikam Sirrul Arifin_22552011066',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black54,
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      '3. M Dimas Daniswara Putra_22552011263',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black54,
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      '4. Naufal Pratista Sugandhi_22552011077',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ],
-                ),
+  
+  Widget _buildCard({required String title, required String content}) {
+    return Card(
+      elevation: 5,
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontFamily: "poppinsregular",
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
               ),
             ),
-
             const SizedBox(height: 10),
-
-            // Informasi Kontak
-            Card(
-              elevation: 5,
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Hubungi Kami',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'Alamat: Jl.terbaik no.69, Bandung, jawa Barat\nTelepon: +6287 7654 7890\nEmail: J-wircoffee@gmail.com',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 10),
-
-            // Tombol kembali
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: const BorderSide(color: warnaKopi3),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 80,
-                  vertical: 15,
-                ),
-              ),
-              child: const Text(
-                'Kembali',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: warnaKopi2,
-                ),
+            Text(
+              content,
+              textAlign: TextAlign.start, 
+              style: const TextStyle(
+                fontFamily: "poppinsregular",
+                fontSize: 16,
+                color: Colors.black54,
               ),
             ),
           ],

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -351,6 +352,70 @@ class SupabaseAuthService with ChangeNotifier {
     } catch (e) {
       log("Kesalahan saat mengisi saldo $e", name: "SupabaseAuthService");
       throw Exception("Kesalahan saat mengisi saldo: $e");
+    }
+  }
+
+  // Fungsi untuk mengunggah gambar profil ke Supabase Storage
+  Future<String?> uploadProfileImage(File imageFile) async {
+    try {
+      final user = _supabase.auth.currentUser;
+      if (user == null) throw Exception("Pengguna tidak ditemukan");
+
+      final fileName = 'images_users/${user.id}.jpg';
+
+      // Hapus gambar lama jika ada
+      await _supabase.storage.from('images_users').remove([fileName]);
+
+      // Upload gambar baru
+      await _supabase.storage.from('images_users').upload(fileName, imageFile);
+
+      // Ambil URL publik gambar
+      final imageUrl = _supabase.storage.from('images_users').getPublicUrl(fileName);
+
+      log("Gambar berhasil diunggah: $imageUrl", name: "SupabaseAuthService");
+      return imageUrl;
+    } catch (e) {
+      log("Kesalahan saat mengunggah gambar: $e", name: "SupabaseAuthService");
+      return null;
+    }
+  }
+
+  // Fungsi untuk memperbarui gambar profil di tabel profile_users
+  Future<void> updateProfileImage(File imageFile) async {
+    try {
+      final user = _supabase.auth.currentUser;
+      if (user == null) throw Exception("Pengguna tidak ditemukan");
+
+      final imageUrl = await uploadProfileImage(imageFile);
+      if (imageUrl == null) throw Exception("Gagal mengunggah gambar");
+
+      await _supabase.from('profile_users').update({
+        'profile_img': imageUrl,
+      }).eq('id', user.id);
+
+      log("Gambar profil berhasil diperbarui", name: "SupabaseAuthService");
+    } catch (e) {
+      log("Kesalahan saat memperbarui gambar profil: $e", name: "SupabaseAuthService");
+      throw Exception("Kesalahan saat memperbarui gambar profil: $e");
+    }
+  }
+
+  // Fungsi untuk mendapatkan URL gambar profil
+  Future<String?> getProfileImage() async {
+    try {
+      final user = _supabase.auth.currentUser;
+      if (user == null) return null;
+
+      final response = await _supabase
+          .from('profile_users')
+          .select('profile_img')
+          .eq('id', user.id)
+          .maybeSingle();
+
+      return response?['profile_img'] as String?;
+    } catch (e) {
+      log("Kesalahan mengambil gambar profil: $e", name: "SupabaseAuthService");
+      return null;
     }
   }
 

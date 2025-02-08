@@ -26,7 +26,7 @@ class _AddCoffeePageState extends State<AddCoffeePage> {
     'Espresso',
     'Americano',
     'Latte',
-    'Cappucino',
+    'Cappuccino',
     'Mocha',
   ];
 
