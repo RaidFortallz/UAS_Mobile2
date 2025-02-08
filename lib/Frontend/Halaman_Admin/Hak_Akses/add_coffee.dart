@@ -77,6 +77,21 @@ class _AddCoffeePageState extends State<AddCoffeePage> {
   Future<void> _addCoffee() async {
     if (!_formKey.currentState!.validate()) return;
 
+    // Validasi apakah gambar sudah dipilih
+    if (_image == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Silakan pilih gambar terlebih dahulu!',
+            style: TextStyle(fontSize: 12, color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return;
+    }
+
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     FocusScope.of(context).unfocus();
 
@@ -84,8 +99,10 @@ class _AddCoffeePageState extends State<AddCoffeePage> {
     if (price == null || price <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Harga kopi tidak valid!',
-              style: TextStyle(fontSize: 12, color: Colors.white)),
+          content: Text(
+            'Harga kopi tidak valid!',
+            style: TextStyle(fontSize: 12, color: Colors.white),
+          ),
           backgroundColor: Colors.red,
           duration: Duration(seconds: 1),
         ),
@@ -114,8 +131,8 @@ class _AddCoffeePageState extends State<AddCoffeePage> {
         'description': _descriptionController.text,
         'price': price,
         'category': _category,
-        'rate': 1.1, // Default rate 0
-        'review': 0, // Default review 0
+        'rate': 1.1,
+        'review': 0,
       }).select();
 
       if (response.isEmpty) {
@@ -124,12 +141,10 @@ class _AddCoffeePageState extends State<AddCoffeePage> {
 
       final coffeeId = response[0]['id'];
 
-      // Jika ada gambar, upload ke storage
-      String? imageUrl;
-      if (_image != null) {
-        imageUrl = await _uploadCoffeeImage(_image!, coffeeId);
+      // Upload gambar ke storage
+      String? imageUrl = await _uploadCoffeeImage(_image!, coffeeId);
 
-        // Update URL gambar ke tabel coffees
+      if (imageUrl != null) {
         await supabase.from('coffees').update({
           'image': imageUrl,
         }).eq('id', coffeeId);

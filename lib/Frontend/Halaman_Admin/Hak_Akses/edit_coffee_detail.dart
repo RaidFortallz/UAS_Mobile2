@@ -228,7 +228,11 @@ class _EditCoffeeDetailPageState extends State<EditCoffeeDetailPage> {
           bottom: 10,
           right: 10,
           child: IconButton(
-            icon: const Icon(Icons.add_a_photo, color: Colors.white, size: 40,),
+            icon: const Icon(
+              Icons.add_a_photo,
+              color: Colors.white,
+              size: 40,
+            ),
             onPressed: pickImage,
           ),
         ),

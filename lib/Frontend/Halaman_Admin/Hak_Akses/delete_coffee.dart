@@ -6,6 +6,7 @@ import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class DeleteCoffeePage extends StatefulWidget {
   const DeleteCoffeePage({super.key});
@@ -214,8 +215,32 @@ class _DeleteCoffeePageState extends State<DeleteCoffeePage> {
                         ),
                       ),
                       Bounceable(
-                        onTap: () async {
-                          await deleteCoffee(coffee['id'], coffee['name']);
+                        onTap: () {
+                          AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.warning,
+                            animType: AnimType.bottomSlide,
+                            title: 'Konfirmasi',
+                            titleTextStyle: const TextStyle(
+                              fontFamily: "poppinsregular",
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: warnaKopi2,
+                            ),
+                            desc:
+                                'Apakah Anda yakin ingin menghapus kopi ${coffee['name']}?',
+                            descTextStyle: const TextStyle(
+                              fontFamily: "poppinsregular",
+                              fontSize: 14,
+                              color: warnaHitam2,
+                            ),
+                            btnCancelText: 'Tidak',
+                            btnOkText: 'Ya',
+                            btnCancelOnPress: () {},
+                            btnOkOnPress: () async {
+                              await deleteCoffee(coffee['id'], coffee['name']);
+                            },
+                          ).show();
                         },
                         child: Container(
                           height: 32,
