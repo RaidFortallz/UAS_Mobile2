@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_mobile2/Backend/Provider/supabase_auth.dart';
 import 'package:uas_mobile2/Frontend/Halaman_User/PopUp_Dialog/awesome_dialog.dart';
@@ -17,6 +18,8 @@ class _LoginState extends State<Login> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isSecurePassword = true;
+
+  var logger = Logger();
 
   void _loginUser() async {
     final authService =
@@ -52,7 +55,7 @@ class _LoginState extends State<Login> {
       await authService.loginWithEmail(email: email, password: password);
 
       final adminData = await authService.getAdminUser();
-      print("Admin Data: $adminData");
+      logger.d("Admin Data: $adminData");
       if (adminData != null && adminData['is_admin'] == true) {
         // Arahkan ke dashboard admin
         if (mounted) {

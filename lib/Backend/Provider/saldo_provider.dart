@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SaldoProvider with ChangeNotifier {
   int _saldo = 0;
 
   int get saldo => _saldo;
+
+  var logger = Logger();
 
   // Mencari saldo di tabel supabase
   Future<void> fetchSaldo(String userId) async {
@@ -22,7 +25,7 @@ class SaldoProvider with ChangeNotifier {
       }
       notifyListeners();
     } catch (e) {
-      print('Gagal mengambil saldo: $e');
+      logger.e('Gagal mengambil saldo: $e');
       _saldo = 0;
       notifyListeners();
     }
@@ -44,12 +47,12 @@ class SaldoProvider with ChangeNotifier {
       if (updatedSaldo != null && updatedSaldo['saldo'] == newSaldo) {
         _saldo = newSaldo;
         notifyListeners();
-        print('Saldo berhasil diperbarui: $_saldo');
+        logger.i('Saldo berhasil diperbarui: $_saldo');
       } else {
-        print('Gagal memperbarui saldo: saldo tidak berubah');
+        logger.w('Gagal memperbarui saldo: saldo tidak berubah');
       }
     } catch (e) {
-      print('Error saat memperbarui saldo: $e');
+      logger.e('Error saat memperbarui saldo: $e');
     }
   }
 

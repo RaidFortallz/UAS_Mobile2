@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_mobile2/Backend/Provider/cart_provider.dart';
 import 'package:uas_mobile2/Backend/Provider/saldo_provider.dart';
@@ -28,6 +29,8 @@ class _KeranjangState extends State<Keranjang> {
   String city = '';
   String address = '';
   String phoneNumber = '';
+
+  var logger = Logger();
 
   @override
   void initState() {
@@ -539,7 +542,7 @@ class _KeranjangState extends State<Keranjang> {
 
     final int totalWithShipping = totalPrice + shippingCost;
 
-    print("Saldo: $saldo, Total dengan pengiriman: $totalWithShipping");
+    logger.e("Saldo: $saldo, Total dengan pengiriman: $totalWithShipping");
 
     bool isSaldoEnough = saldo >= totalWithShipping;
 

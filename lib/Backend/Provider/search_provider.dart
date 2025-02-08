@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 
 class SearchProvider extends ChangeNotifier{
   final Dio dio = Dio();
+
+  var logger = Logger();
 
   List<Coffees> _searchResults = [];
   bool _isLoading = false;
@@ -30,7 +33,7 @@ class SearchProvider extends ChangeNotifier{
         )
       );
 
-      print(response.data);
+      logger.d(response.data);
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
@@ -38,7 +41,7 @@ class SearchProvider extends ChangeNotifier{
       }
     } catch (e) {
       _errorMessage = 'Error pencarian data: $e';
-      print(_errorMessage);
+      logger.e(_errorMessage);
     } finally {
       _isLoading = false;
       Future.microtask(() => notifyListeners());

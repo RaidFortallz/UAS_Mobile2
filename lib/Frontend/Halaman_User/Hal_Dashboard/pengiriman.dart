@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_mobile2/Backend/Provider/cart_provider.dart';
 import 'package:uas_mobile2/Frontend/Halaman_User/Hal_Dashboard/Maps/lacak_pesanan.dart';
@@ -22,8 +23,10 @@ class _PengirimanFragmentState extends State<PengirimanFragment> {
     final orderItems = cartProvider.orderItems;
     final totalPrice = cartProvider.orderTotalPrice;
 
-    print('Order Placed: ${cartProvider.orderPlaced}');
-    print('Cart Items: $orderItems');
+    var logger = Logger();
+
+    logger.d('Order Placed: ${cartProvider.orderPlaced}');
+    logger.d('Cart Items: $orderItems');
 
     return Scaffold(
       body: ListView(

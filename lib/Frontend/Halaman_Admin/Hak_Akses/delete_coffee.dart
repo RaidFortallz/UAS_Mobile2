@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
@@ -18,6 +19,8 @@ class _DeleteCoffeePageState extends State<DeleteCoffeePage> {
   List<dynamic> coffeeList = [];
   bool isLoading = true;
 
+  var logger = Logger();
+
   @override
   void initState() {
     super.initState();
@@ -32,7 +35,7 @@ class _DeleteCoffeePageState extends State<DeleteCoffeePage> {
         isLoading = false;
       });
     } catch (e) {
-      print('Error fetching coffees: $e');
+      logger.e('Error fetching coffees: $e');
       setState(() {
         isLoading = false;
       });
@@ -42,6 +45,9 @@ class _DeleteCoffeePageState extends State<DeleteCoffeePage> {
   Future<void> deleteCoffee(int coffeeId, String coffeeName) async {
     try {
       await supabase.from('coffees').delete().eq('id', coffeeId);
+
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -58,7 +64,7 @@ class _DeleteCoffeePageState extends State<DeleteCoffeePage> {
       );
       fetchCoffees();
     } catch (e) {
-      print('Error deleting coffee: $e');
+      logger.e('Error deleting coffee: $e');
     }
   }
 

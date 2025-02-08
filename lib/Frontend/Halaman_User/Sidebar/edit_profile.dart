@@ -180,6 +180,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         bool isPasswordCorrect = await authService
                             .verifyCurrentPassword(_currentPassword!);
                         if (!isPasswordCorrect) {
+                          if (!mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                                 content: Text('Password lama salah!')),
@@ -188,6 +189,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         }
 
                         if (_newPassword == _currentPassword) {
+                          if (!mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                                 content: Text(
@@ -208,7 +210,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         newEmail: _newEmail!,
                         newPhone: _newPhone!,
                       );
-
+                      if (!mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                             content: Text('Profil berhasil diperbarui!')),
@@ -216,6 +218,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
                       Navigator.pop(context, true);
                     } catch (e) {
+                      if (!mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Gagal memperbarui profil: $e')),
                       );

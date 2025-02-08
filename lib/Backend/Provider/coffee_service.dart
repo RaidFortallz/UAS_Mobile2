@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:uas_mobile2/Backend/koneksi.dart';
 import 'package:uas_mobile2/Models/coffee_model.dart';
 
 class CoffeeService with ChangeNotifier {
   final supabase = Koneksi.client;
+
+  var logger = Logger();
 
   // Variabel untuk menyimpan daftar kopi, status loading, dan pesan error
   List<Coffees> _coffees = [];
@@ -26,7 +29,7 @@ class CoffeeService with ChangeNotifier {
       _coffees = response.map((item) => Coffees.fromJson(item)).toList();
     } catch (e) {
       _errorMessage = 'Error fetching data: $e';
-      print(_errorMessage);
+      logger.e(_errorMessage);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -51,7 +54,7 @@ class CoffeeService with ChangeNotifier {
       }
     } catch (e) {
       _errorMessage = 'Error saat mengambil data by category: $e';
-      print(_errorMessage);
+      logger.e(_errorMessage);
     } finally {
       _isLoading = false;
       notifyListeners();

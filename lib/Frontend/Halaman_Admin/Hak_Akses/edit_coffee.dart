@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:uas_mobile2/Frontend/Halaman_Admin/Hak_Akses/edit_coffee_detail.dart';
@@ -19,6 +20,8 @@ class _EditCoffeePageState extends State<EditCoffeePage> {
   List<dynamic> coffeeList = [];
   bool isLoading = true;
 
+  var logger = Logger();
+
   @override
   void initState() {
     super.initState();
@@ -34,7 +37,7 @@ class _EditCoffeePageState extends State<EditCoffeePage> {
         isLoading = false;
       });
     } catch (e) {
-      print('Error fetching coffee data: $e');
+      logger.e('Error fetching coffee data: $e');
       setState(() {
         isLoading = false;
       });
@@ -153,12 +156,18 @@ class _EditCoffeePageState extends State<EditCoffeePage> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: CachedNetworkImage(
-                      imageUrl: coffee['image'],
+                      imageUrl: coffee['image'] ?? '', // Validasi jika null
                       height: 128,
                       width: double.infinity,
                       fit: BoxFit.cover,
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                      placeholder: (context, url) => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      errorWidget: (context, url, error) => const Icon(
+                        Icons.image_not_supported,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                   const Gap(8),
