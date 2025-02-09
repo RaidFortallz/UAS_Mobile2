@@ -166,12 +166,15 @@ class _DeleteCoffeePageState extends State<DeleteCoffeePage> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: CachedNetworkImage(
-                      imageUrl: coffee['image'],
+                      imageUrl: coffee['image'] != null &&
+                              coffee['image'].toString().isNotEmpty
+                          ? coffee['image']
+                          : 'https://via.placeholder.com/150',
                       height: 128,
                       width: double.infinity,
                       fit: BoxFit.cover,
                       errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                          const Icon(Icons.broken_image),
                     ),
                   ),
                   const Gap(8),
