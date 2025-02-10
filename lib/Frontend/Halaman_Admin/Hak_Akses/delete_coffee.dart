@@ -166,7 +166,7 @@ class _DeleteCoffeePageState extends State<DeleteCoffeePage> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: CachedNetworkImage(
-                      imageUrl: coffee['image'],
+                      imageUrl: coffee['image'] ?? '',
                       height: 128,
                       width: double.infinity,
                       fit: BoxFit.cover,

@@ -8,6 +8,7 @@ import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:uas_mobile2/Warna_Tema/warna_tema.dart';
+import 'package:uuid/uuid.dart';
 
 class EditCoffeeDetailPage extends StatefulWidget {
   final int coffeeId;
@@ -77,96 +78,110 @@ class _EditCoffeeDetailPageState extends State<EditCoffeeDetailPage> {
     }
   }
 
-  // Fungsi untuk mengunggah gambar ke Supabase Storage
   Future<String?> uploadCoffeeImage(File imageFile) async {
-    try {
-      final fileName = 'images_coffee/${widget.coffeeId}.jpg';
+  try {
+    // Gunakan UUID sebagai nama file
+    final fileName = 'images_coffee/${const Uuid().v4()}.jpg';
 
-      // Hapus gambar lama jika ada
-      await supabase.storage.from('images_coffee').remove([fileName]);
-
-      // Upload gambar baru
-      await supabase.storage.from('images_coffee').upload(fileName, imageFile);
-
-      // Ambil URL gambar yang baru diunggah
-      final imageUrl =
-          supabase.storage.from('images_coffee').getPublicUrl(fileName);
-      return imageUrl;
-    } catch (e) {
-      logger.e('Error uploading coffee image: $e');
-      return null;
+    
+    if (!imageFile.existsSync()) {
+      throw Exception("File gambar tidak ditemukan di perangkat.");
     }
+
+    
+    await supabase.storage.from('images_coffee').upload(fileName, imageFile);
+
+    
+    final imageUrl = supabase.storage.from('images_coffee').getPublicUrl(fileName);
+
+    if (imageUrl.isEmpty) {
+      throw Exception("Gagal mendapatkan URL gambar dari Supabase.");
+    }
+
+    logger.i("✅ Gambar berhasil diunggah: $imageUrl");
+    return imageUrl;
+  } catch (e) {
+    logger.e('❌ Error uploading coffee image: $e');
+    return null;
   }
+}
+
 
   // Fungsi untuk mengupdate data kopi, termasuk gambar
   Future<void> updateCoffee() async {
-    int? price = int.tryParse(priceController.text);
-    if (price == null || price <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Harga kopi tidak valid!',
-              style: TextStyle(fontSize: 12, color: Colors.white)),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 1),
-        ),
-      );
-      return;
-    }
-
-    String? newImageUrl = coffeeImageUrl;
-
-    // Jika ada gambar baru, upload ke storage
-    if (coffeeImage != null) {
-      newImageUrl = await uploadCoffeeImage(coffeeImage!);
-    }
-
-    try {
-      final response = await supabase
-          .from('coffees')
-          .update({
-            'name': nameController.text,
-            'price': price,
-            'category': categoryController.text,
-            'description': descriptionController.text,
-            'image': newImageUrl,
-          })
-          .eq('id', widget.coffeeId)
-          .select();
-
-      // Cek apakah terdapat error pada response Supabase
-      if (response.isEmpty) {
-        throw Exception('Gagal memperbarui kopi');
-      }
-
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Kopi ${nameController.text} berhasil diperbarui',
-              style: const TextStyle(fontSize: 12, color: Colors.white)),
-          backgroundColor: warnaKopi2,
-          duration: const Duration(seconds: 1),
-        ),
-      );
-
-      // Panggil fungsi fetchCoffees untuk memperbarui data di halaman utama
-      widget.fetchCoffees();
-      Navigator.pop(context);
-    } catch (e) {
-      logger.e('Error updating coffee: $e');
-
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Terjadi kesalahan saat memperbarui kopi: $e',
-              style: const TextStyle(fontSize: 12, color: Colors.white)),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 1),
-        ),
-      );
-    }
+  int? price = int.tryParse(priceController.text);
+  if (price == null || price <= 0) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Harga kopi tidak valid!', style: TextStyle(fontSize: 12, color: Colors.white)),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 1),
+      ),
+    );
+    return;
   }
+
+  String? newImageUrl = coffeeImageUrl;
+
+  
+  if (coffeeImage != null) {
+    logger.i("Mengunggah gambar baru...");
+    final uploadedUrl = await uploadCoffeeImage(coffeeImage!);
+
+    if (uploadedUrl != null && uploadedUrl.isNotEmpty) {
+      logger.i("Gambar baru berhasil diunggah: $uploadedUrl");
+      newImageUrl = uploadedUrl;
+    } else {
+      logger.e("Gagal mengunggah gambar, tetap menggunakan gambar lama.");
+    }
+  } else {
+    logger.w("Tidak ada gambar baru yang dipilih.");
+  }
+
+  try {
+    logger.i("📡 Mengupdate data kopi di database...");
+    final response = await supabase.from('coffees').update({
+      'name': nameController.text,
+      'price': price,
+      'category': categoryController.text,
+      'description': descriptionController.text,
+      'image': newImageUrl, 
+    }).eq('id', widget.coffeeId).select();
+
+    if (response.isEmpty) {
+      throw Exception('Gagal memperbarui kopi di database.');
+    }
+
+    if (!mounted) return;
+
+    logger.i("Kopi berhasil diperbarui di database.");
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Kopi ${nameController.text} berhasil diperbarui', style: const TextStyle(fontSize: 12, color: Colors.white)),
+        backgroundColor: warnaKopi2,
+        duration: const Duration(seconds: 1),
+      ),
+    );
+
+    widget.fetchCoffees();
+    Navigator.pop(context);
+  } catch (e) {
+    logger.e('Error memperbarui kopi: $e');
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Terjadi kesalahan saat memperbarui kopi: $e', style: const TextStyle(fontSize: 12, color: Colors.white)),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 1),
+      ),
+    );
+  }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
