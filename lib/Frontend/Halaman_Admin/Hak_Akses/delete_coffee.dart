@@ -171,7 +171,7 @@ class _DeleteCoffeePageState extends State<DeleteCoffeePage> {
                       width: double.infinity,
                       fit: BoxFit.cover,
                       errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                          const Icon(Icons.broken_image),
                     ),
                   ),
                   const Gap(8),
