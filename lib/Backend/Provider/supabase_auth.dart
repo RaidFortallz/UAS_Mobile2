@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -13,14 +15,34 @@ class SupabaseAuthService with ChangeNotifier {
 
   var logger = Logger();
 
+  // Simpan public key ke supabase
+  Future<void> savePublicKeyToSupabase(
+      String userId, String publicKeyBase64) async {
+    await _supabase
+        .from('profile_users')
+        .update({'public_key': publicKeyBase64}).eq('id', userId);
+  }
+
   // Fungsi untuk register user
-  Future<void> registerUser({
+  Future<String?> registerUser({
     required String username,
     required String email,
     required String password,
     required String phoneNumber,
   }) async {
     try {
+      // Cek apakah email sudah terdaftar di tabel profile_users
+      final existingUser = await _supabase
+          .from('profile_users')
+          .select('id')
+          .eq('email', email)
+          .maybeSingle();
+
+      if (existingUser != null) {
+        throw Exception("Email sudah digunakan, silahkan pakai email lain.");
+      }
+
+      // Register di Supabase Auth
       final response = await _supabase.auth.signUp(
         email: email,
         password: password,
@@ -37,23 +59,72 @@ class SupabaseAuthService with ChangeNotifier {
 
       // Simpan data tambahan di tabel profile_users
       final userId = response.user!.id;
-      await _supabase.from('profile_users').insert({
-        'id': userId,
-        'username': username,
-        'email': email,
-        'phone_number': phoneNumber,
-        'created_at': DateTime.now().toIso8601String(),
-      }).select();
 
-      _user = response.user;
-      notifyListeners();
+      try {
+        // Simpan user ke tabel profile_users dulu
+        await _supabase.from('profile_users').insert({
+          'id': userId,
+          'username': username,
+          'email': email,
+          'phone_number': phoneNumber,
+          'created_at': DateTime.now().toIso8601String(),
+        }).select();
 
-      log("User registered successfully", name: "SupabaseAuthService");
-      log("Email: $email", name: "SupabaseAuthService");
+        _user = response.user;
+        notifyListeners();
+
+        log("User registered successfully", name: "SupabaseAuthService");
+        log("Email: $email", name: "SupabaseAuthService");
+
+        return userId; // Kembalikan userId jika registrasi berhasil
+      } catch (dbError) {
+        // Jika gagal menyimpan data di profile_users, hapus user dari Auth Supabase
+        await _supabase.auth.admin.deleteUser(userId);
+        throw Exception("Terjadi kesalahan, coba registrasi ulang.");
+      }
     } catch (e) {
       log("Kesalahan saat registrasi: $e", name: "SupabaseAuthService");
-      throw Exception("Kesalahan saat registrasi: $e");
+
+      if (e is AuthException && e.message.contains("User already registered")) {
+        throw Exception("Email sudah digunakan, silahkan pakai email lain.");
+      }
+
+      throw Exception("Kesalahan saat registrasi: ${e.toString()}");
     }
+  }
+
+  // mengambil public key dari tabel profile_users
+  Future<String?> getPublicKeyByUserId(String userId) async {
+    final response = await _supabase
+        .from('profile_users')
+        .select('public_key')
+        .eq('id', userId)
+        .maybeSingle();
+
+    if (response == null || !response.containsKey('public_key')) {
+      return null;
+    }
+
+    return response['public_key'] as String?;
+  }
+
+  //Fungsi Login dengan EdDSA
+  Future<bool> loginWithEdDSA(String userId, String signedMessage) async {
+    final publicKeyBase64 = await getPublicKeyByUserId(userId);
+    if (publicKeyBase64 == null) return false;
+
+    final publicKeyBytes = base64Decode(publicKeyBase64);
+    final publicKey =
+        SimplePublicKey(publicKeyBytes, type: KeyPairType.ed25519);
+
+    final signatureBytes = base64Decode(signedMessage);
+
+    final message = utf8.encode("LoginChallenge");
+
+    final algorithm = Ed25519();
+    final signature = Signature(signatureBytes, publicKey: publicKey);
+
+    return await algorithm.verify(message, signature: signature);
   }
 
   // Fungsi untuk login user menggunakan email dan password
@@ -109,6 +180,18 @@ class SupabaseAuthService with ChangeNotifier {
       log("Kesalahan saat mencari admin: $e", name: "SupabaseAuthService");
       throw Exception("Kesalahan saat mencari admin: $e");
     }
+  }
+
+  // Fungsi untuk mendapatkan user berdasarkan email
+  Future<Map<String, dynamic>?> getUserByEmail(String email) async {
+    final response = await _supabase
+        .from('profile_users')
+        .select()
+        .eq('email', email)
+        .maybeSingle();
+
+    if (response == null) return null;
+    return response;
   }
 
   // Fungsi untuk mendapatkan email berdasarkan username dari tabel profile_users
@@ -373,7 +456,8 @@ class SupabaseAuthService with ChangeNotifier {
       await _supabase.storage.from('images_users').upload(fileName, imageFile);
 
       // Ambil URL publik gambar
-      final imageUrl = _supabase.storage.from('images_users').getPublicUrl(fileName);
+      final imageUrl =
+          _supabase.storage.from('images_users').getPublicUrl(fileName);
 
       log("Gambar berhasil diunggah: $imageUrl", name: "SupabaseAuthService");
       return imageUrl;
@@ -398,7 +482,8 @@ class SupabaseAuthService with ChangeNotifier {
 
       log("Gambar profil berhasil diperbarui", name: "SupabaseAuthService");
     } catch (e) {
-      log("Kesalahan saat memperbarui gambar profil: $e", name: "SupabaseAuthService");
+      log("Kesalahan saat memperbarui gambar profil: $e",
+          name: "SupabaseAuthService");
       throw Exception("Kesalahan saat memperbarui gambar profil: $e");
     }
   }
@@ -420,6 +505,18 @@ class SupabaseAuthService with ChangeNotifier {
       log("Kesalahan mengambil gambar profil: $e", name: "SupabaseAuthService");
       return null;
     }
+  }
+
+  // fungsi untuk mendapatkan JWT setelah EdDSA login
+  Future<String?> getJwtToken(String userId) async {
+    final response = await Supabase.instance.client
+        .rpc('login_with_eddsa', params: {'user_id': userId});
+
+    if (response.error != null) {
+      print("Gagal mendapatkan JWT: ${response.error!.message}");
+      return null;
+    }
+    return response.data['token'];
   }
 
   // Fungsi untuk logout user

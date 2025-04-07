@@ -69,13 +69,12 @@ class _SidebarPageState extends State<SidebarPage> {
                       bottomRight: Radius.circular(30),
                     ),
                     child: Image.asset(
-                      'assets/image/bg_kopi4.png', 
+                      'assets/image/bg_kopi4.png',
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
 
-                
                 Positioned.fill(
                   child: Container(
                     decoration: BoxDecoration(
@@ -151,6 +150,14 @@ class _SidebarPageState extends State<SidebarPage> {
               title: 'Saldo',
               onTap: () {
                 Navigator.pushNamed(context, '/saldo');
+              },
+            ),
+            _buildMenuItem(
+              context,
+              icon: Icons.key_outlined,
+              title: 'Kunci (EdDSA)',
+              onTap: () {
+                Navigator.pushNamed(context, '/kunci_eddsa');
               },
             ),
             _buildMenuItem(

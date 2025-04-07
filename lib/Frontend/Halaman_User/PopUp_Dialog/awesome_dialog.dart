@@ -11,6 +11,7 @@ class CustomDialog {
     AnimType? animType,
     VoidCallback? btnOkOnPress,
   }) {
+    FocusScope.of(context).unfocus();
 
     AwesomeDialog(
       context: context,
@@ -19,13 +20,13 @@ class CustomDialog {
       title: title,
       desc: desc,
       btnOkOnPress: btnOkOnPress != null
-        ? () {
-            btnOkOnPress();
-            FocusScope.of(context).requestFocus(FocusNode());
-          }
-        : () {
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
+          ? () {
+              btnOkOnPress();
+              FocusScope.of(context).requestFocus(FocusNode());
+            }
+          : () {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
       btnOkColor: warnaKopi2,
       headerAnimationLoop: true,
       padding: const EdgeInsets.all(16.0),

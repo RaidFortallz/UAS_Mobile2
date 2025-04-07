@@ -20,6 +20,15 @@ class _RegisterState extends State<Register> {
   final TextEditingController _passwordControllerReg = TextEditingController();
   bool _isSecurePassword = true;
 
+  @override
+  void dispose() {
+    _usernameControllerReg.dispose();
+    _emailControllerReg.dispose();
+    _phoneControllerReg.dispose();
+    _passwordControllerReg.dispose();
+    super.dispose();
+  }
+
   void _registerUser() async {
     final username = _usernameControllerReg.text.trim();
     final email = _emailControllerReg.text.trim();
@@ -40,12 +49,16 @@ class _RegisterState extends State<Register> {
     }
 
     try {
-      await _authService.registerUser(
+      final userId = await _authService.registerUser(
         username: username,
         email: email,
         password: password,
         phoneNumber: phoneNumber,
       );
+
+      if (userId == null) {
+        throw "Registrasi gagal, coba lagi.";
+      }
 
       if (mounted) {
         CustomDialog.showDialog(
